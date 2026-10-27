@@ -1,0 +1,468 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-ash: #EDF0F2;
+    --bg-surface: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --primary-yellow: #FBAD18;
+    --primary-yellow-hover: #E69D0E;
+    --primary-yellow-dark: #D97706;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --border-color: #E2E8F0;
+  }
+
+  /* Completely remove any text shadow across the entire site for clean, crisp text */
+  *, *::before, *::after {
+    text-shadow: none !important;
+  }
+
+  body {
+    background-color: #EDF0F2;
+    color: #0F172A;
+    font-family: var(--font-inter), sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-inter-tight), sans-serif;
+    text-shadow: none !important;
+    letter-spacing: -0.02em;
+    color: #0F172A;
+  }
+}
+
+/* ========================================================
+   HEADER & ICON ANIMATIONS
+   ======================================================== */
+
+/* Expanding Radar Ping Wave */
+@keyframes radar-ping {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Rotating Orbit Glow Ring around the brand mark */
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Counter-rotating orbit */
+@keyframes orbit-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* Heartbeat / Breathing scale pulse for brand icons */
+@keyframes icon-beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.12);
+  }
+  30% {
+    transform: scale(1.05);
+  }
+  45% {
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* Gentle hover float animation */
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3.5px);
+  }
+}
+
+/* Key wobble animation for 2FA tool */
+@keyframes key-wobble {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-12deg);
+  }
+  75% {
+    transform: rotate(12deg);
+  }
+}
+
+.anim-radar {
+  animation: radar-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.anim-orbit {
+  animation: orbit-spin 12s linear infinite;
+}
+
+.anim-orbit-slow {
+  animation: orbit-spin 20s linear infinite;
+}
+
+.anim-orbit-reverse {
+  animation: orbit-spin-reverse 15s linear infinite;
+}
+
+.anim-icon-beat {
+  animation: icon-beat 3.2s ease-in-out infinite;
+}
+
+.anim-float {
+  animation: float-subtle 4s ease-in-out infinite;
+}
+
+.anim-key {
+  animation: key-wobble 3s ease-in-out infinite;
+}
+
+/* ============================================================
+   HERO BEAMS & ICON ANIMATIONS
+   ============================================================ */
+
+/* Sweeping diagonal subtle light beams */
+.hero-beams {
+  position: absolute;
+  inset: -20% -30%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-beams i {
+  position: absolute;
+  top: -20%;
+  height: 180%;
+  width: 22%;
+  transform: rotate(24deg);
+  background: linear-gradient(90deg, transparent, rgba(251, 173, 24, 0.04) 40%, rgba(251, 173, 24, 0.12) 50%, transparent 60%);
+  animation: hv-beam 14s ease-in-out infinite alternate;
+}
+
+.hero-beams i:nth-child(1) {
+  left: 8%;
+  animation-delay: 0s;
+}
+
+.hero-beams i:nth-child(2) {
+  left: 42%;
+  animation-delay: -5s;
+}
+
+.hero-beams i:nth-child(3) {
+  left: 74%;
+  animation-delay: -9s;
+}
+
+@keyframes hv-beam {
+  0% {
+    transform: rotate(24deg) translateY(-6%);
+    opacity: 0.35;
+  }
+  100% {
+    transform: rotate(24deg) translateY(6%);
+    opacity: 0.85;
+  }
+}
+
+/* Multi-phase gentle floats for floating icon badges */
+@keyframes hero-float-1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@keyframes hero-float-2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-1.5deg); }
+}
+
+@keyframes hero-float-3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1.2deg); }
+}
+
+@keyframes hero-float-4 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-11px) rotate(-1deg); }
+}
+
+.anim-hero-float-1 { animation: hero-float-1 4.8s ease-in-out infinite; }
+.anim-hero-float-2 { animation: hero-float-2 5.6s ease-in-out infinite 0.7s; }
+.anim-hero-float-3 { animation: hero-float-3 5.2s ease-in-out infinite 1.4s; }
+.anim-hero-float-4 { animation: hero-float-4 6.0s ease-in-out infinite 2.1s; }
+
+@keyframes cvn-ringpulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.anim-ringpulse {
+  animation: cvn-ringpulse 3.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+.anim-ringpulse-delayed {
+  animation: cvn-ringpulse 3.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite 1.6s;
+}
+
+@keyframes cvn-orbpulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(251, 173, 24, 0.35), inset 0 0 15px rgba(251, 173, 24, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(251, 173, 24, 0.6), inset 0 0 25px rgba(251, 173, 24, 0.35);
+    transform: scale(1.04);
+  }
+}
+
+.anim-orbpulse {
+  animation: cvn-orbpulse 2.8s ease-in-out infinite;
+}
+
+@keyframes orbit-turn-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-turn-ccw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.anim-orbit-cw {
+  animation: orbit-turn-cw 34s linear infinite;
+}
+
+.anim-orbit-ccw {
+  animation: orbit-turn-ccw 34s linear infinite;
+}
+
+.anim-orbit-cw-fast {
+  animation: orbit-turn-cw 20s linear infinite;
+}
+
+.anim-orbit-ccw-fast {
+  animation: orbit-turn-ccw 20s linear infinite;
+}
+
+.orbit-container:hover .anim-orbit-cw,
+.orbit-container:hover .anim-orbit-ccw,
+.orbit-container:hover .anim-orbit-cw-fast,
+.orbit-container:hover .anim-orbit-ccw-fast {
+  animation-play-state: paused;
+}
+
+/* ========================================================
+   MODERN BUTTON & CARD SYSTEM (LIGHT ASH & HP LB GOLDEN YELLOW)
+   ======================================================== */
+
+.btn-pill, .btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14.5px;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+  padding: 12px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-inter-tight), sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  text-shadow: none !important;
+}
+
+/* Primary Button: HP LB Golden Yellow (#FBAD18) with Lighter Black / Charcoal Text */
+.btn-primary {
+  background: #FBAD18;
+  color: #2D3748 !important;
+  border: 1px solid #E69D0E;
+  box-shadow: 0 4px 14px rgba(251, 173, 24, 0.35);
+  text-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+.btn-primary:hover {
+  background: #E69D0E;
+  color: #1A202C !important;
+  border-color: #D97706;
+  box-shadow: 0 6px 20px rgba(251, 173, 24, 0.45);
+  transform: translateY(-1.5px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary / Ghost Light Glass Button */
+.btn-ghost {
+  background: #FFFFFF;
+  color: #334155 !important;
+  border: 1px solid #CBD5E1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  text-shadow: none !important;
+  font-weight: 600 !important;
+}
+
+.btn-ghost:hover {
+  background: #FFFBEB;
+  border-color: #FBAD18;
+  color: #B45309 !important;
+  box-shadow: 0 4px 12px rgba(251, 173, 24, 0.15);
+  transform: translateY(-1.5px);
+}
+
+.btn-ghost:active {
+  transform: translateY(0);
+}
+
+/* Premium Light Cards */
+.card-glass {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  transition: all 0.25s ease;
+}
+
+.card-glass:hover {
+  border-color: #FBAD18;
+  box-shadow: 0 10px 25px -3px rgba(251, 173, 24, 0.18);
+}
+
+/* Badge System with Golden Amber Tint */
+.badge-calon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(251, 173, 24, 0.14);
+  border: 1px solid rgba(251, 173, 24, 0.4);
+  color: #B45309;
+  text-shadow: none !important;
+}
+
+/* Warm Golden Headline Gradient */
+.text-gradient {
+  color: #D97706 !important;
+  background: linear-gradient(135deg, #B45309 0%, #FBAD18 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* Light Ash Background with Warm Subtle Radiance */
+.bg-cosmic {
+  background-color: #EDF0F2;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(251, 173, 24, 0.12), transparent 70%),
+    radial-gradient(circle at 10% 30%, rgba(226, 232, 240, 0.8), transparent 50%),
+    radial-gradient(circle at 90% 70%, rgba(251, 173, 24, 0.08), transparent 45%);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #EDF0F2;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(251, 173, 24, 0.45);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FBAD18;
+}
+
+/* ========================================================
+   ANIMATIONS & TRANSITIONS FOR DYNAMIC UI
+   ======================================================== */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.cart-drawer-panel {
+  animation: slide-in-right 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
