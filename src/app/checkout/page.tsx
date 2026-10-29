@@ -107,7 +107,7 @@ function CheckoutContent() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
@@ -121,30 +121,37 @@ function CheckoutContent() {
     const orderId = 'BM-' + Math.floor(100000 + Math.random() * 900000);
     const chosenWallet = CRYPTO_WALLETS.find(w => w.symbol === formData.selectedCrypto) || CRYPTO_WALLETS[0];
 
-    const orderData = {
+    const orderPayload = {
       orderId,
       customer: formData,
       cryptoWallet: chosenWallet,
       txid: formData.txid.trim(),
       items: checkoutItems,
       total: checkoutSubtotal,
-      date: new Date().toISOString(),
-      status: 'Awaiting Payment Confirmation',
     };
 
     try {
+      // 1. Save directly into MongoDB Atlas
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload),
+      });
+
+      // 2. Local cache fallback
       const existing = JSON.parse(localStorage.getItem('bm4u_orders') || '[]');
-      existing.unshift(orderData);
+      existing.unshift({
+        ...orderPayload,
+        date: new Date().toISOString(),
+        status: formData.txid.trim() ? 'Payment Verified' : 'Awaiting Payment Confirmation',
+      });
       localStorage.setItem('bm4u_orders', JSON.stringify(existing));
-    } catch {
-      // ignore
-    }
-
-    clearCart();
-
-    setTimeout(() => {
+    } catch (err) {
+      console.error('Order creation notice:', err);
+    } finally {
+      clearCart();
       router.push(`/order-success?orderId=${orderId}`);
-    }, 400);
+    }
   };
 
   return (

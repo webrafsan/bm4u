@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   ShieldCheck, 
@@ -13,6 +13,24 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 
 export default function ReplaceRulesPage() {
+  const [settings, setSettings] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data) {
+            setSettings(data.data);
+          }
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+    loadSettings();
+  }, []);
   return (
     <div className="min-h-screen bg-[#EDF0F2] flex flex-col text-[#0F172A]">
       <Navbar />
@@ -45,10 +63,10 @@ export default function ReplaceRulesPage() {
                   Universal Standard
                 </span>
                 <h2 className="font-heading text-2xl font-bold text-[#0F172A]">
-                  Strict 24-Hour Technical Warranty
+                  {settings?.replacePolicyTitle || 'Strict 24-Hour Technical Warranty'}
                 </h2>
                 <p className="text-xs sm:text-sm text-[#475569] leading-relaxed font-normal">
-                  All accounts and Business Managers carry a 24-hour guarantee starting from the exact timestamp of delivery. Any technical problem must be reported to our Telegram support team within this window.
+                  {settings?.replacePolicyDesc || 'All accounts and Business Managers carry a 24-hour guarantee starting from the exact timestamp of delivery. Any technical problem must be reported to our Telegram support team within this window.'}
                 </p>
               </div>
             </div>

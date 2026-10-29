@@ -1,13 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { BookOpen, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { POSTS } from '@/data/posts';
+import { BlogPost } from '@/types';
 
 export default function TipsPage() {
+  const [postsList, setPostsList] = useState<BlogPost[]>(POSTS);
+
+  useEffect(() => {
+    async function loadDynamicPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+            setPostsList(data.data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load dynamic posts:', err);
+      }
+    }
+    loadDynamicPosts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#EDF0F2] flex flex-col">
       <Navbar />
@@ -31,7 +51,7 @@ export default function TipsPage() {
 
           {/* Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {POSTS.map(post => (
+            {postsList.map(post => (
               <article
                 key={post.slug}
                 className="bg-white rounded-3xl p-6 flex flex-col justify-between border border-slate-200 shadow-sm hover:border-amber-300 hover:shadow-md transition-all duration-300 group"
@@ -48,33 +68,34 @@ export default function TipsPage() {
                   </div>
 
                   <Link href={`/tips/${post.slug}`}>
-                    <h2 className="font-heading text-lg font-bold text-slate-900 group-hover:text-amber-600 transition-colors mb-3 leading-snug">
+                    <h2 className="font-heading font-extrabold text-lg text-slate-900 group-hover:text-amber-600 transition-colors mb-3 leading-snug">
                       {post.title}
                     </h2>
                   </Link>
 
-                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-6">
+                  <p className="text-slate-600 text-xs leading-relaxed line-clamp-3 mb-6">
                     {post.excerpt}
                   </p>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 flex items-center gap-1.5">
+                  <span className="flex items-center gap-1.5 text-slate-400 font-medium">
                     <Calendar className="w-3.5 h-3.5" />
                     {post.date}
                   </span>
-
+                  
                   <Link
                     href={`/tips/${post.slug}`}
-                    className="text-amber-600 hover:text-amber-700 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1"
+                    className="font-bold text-amber-600 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1"
                   >
-                    <span>Read Guide</span>
+                    <span>Read</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </article>
             ))}
           </div>
+
         </div>
       </main>
 

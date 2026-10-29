@@ -1,20 +1,7 @@
 import type { Metadata } from 'next';
-import { Inter, Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { CartDrawer } from '@/components/CartDrawer';
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const interTight = Inter_Tight({
-  subsets: ['latin'],
-  variable: '--font-inter-tight',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'BM 4 U | Premium Meta Business Manager & Advertising Assets',
@@ -38,7 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-screen bg-[#EDF0F2] text-[#0F172A] antialiased selection:bg-[#FBAD18]/30 selection:text-[#0F172A]">
         <CartProvider>
           {children}

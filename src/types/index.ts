@@ -48,3 +48,44 @@ export interface UIDCheckResult {
   message?: string;
   time?: string;
 }
+
+export interface OrderCustomer {
+  fullName: string;
+  email: string;
+  telegram: string;
+  paymentMethod: string;
+  selectedCrypto?: string;
+  txid?: string;
+  orderNotes?: string;
+}
+
+export interface OrderCryptoWallet {
+  id?: string;
+  name: string;
+  symbol: string;
+  network: string;
+  address: string;
+  qrUrl?: string;
+}
+
+export type OrderStatus = 
+  | 'Awaiting Payment' 
+  | 'Payment Verified' 
+  | 'Processing' 
+  | 'Completed' 
+  | 'Cancelled';
+
+export interface OrderRecord {
+  _id?: any;
+  orderId: string;
+  customer: OrderCustomer;
+  cryptoWallet?: OrderCryptoWallet;
+  txid: string;
+  items: CartItem[];
+  total: number;
+  status: OrderStatus;
+  deliveryCredentials?: string;
+  adminNotes?: string;
+  createdAt: string;
+  updatedAt: string;
+}

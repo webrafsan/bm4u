@@ -1,15 +1,34 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, ArrowLeft, Send } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { CartDrawer } from '@/components/CartDrawer';
 import { POSTS } from '@/data/posts';
+import { BlogPost } from '@/types';
 
 export default function TipClient({ slug }: { slug: string }) {
-  const post = POSTS.find(p => p.slug === slug);
+  const initialPost = POSTS.find(p => p.slug === slug);
+  const [post, setPost] = useState<BlogPost | undefined>(initialPost);
+
+  useEffect(() => {
+    async function loadPost() {
+      try {
+        const res = await fetch(`/api/posts/${slug}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data) {
+            setPost(data.data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load post:', err);
+      }
+    }
+    loadPost();
+  }, [slug]);
 
   if (!post) {
     return (

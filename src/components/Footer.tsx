@@ -157,6 +157,13 @@ export const Footer = () => {
               <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
               All Systems Operational
             </span>
+            <span className="text-[#CBD5E1]">|</span>
+            <Link
+              href="/admin"
+              className="text-[#94A3B8] hover:text-[#D97706] transition-colors flex items-center gap-1 text-[11px]"
+            >
+              <span>Admin Portal</span>
+            </Link>
           </div>
         </div>
       </div>

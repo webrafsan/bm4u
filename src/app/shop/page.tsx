@@ -1,24 +1,44 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, Globe, ShoppingBag, X, ArrowUpDown } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ProductCard } from '@/components/ProductCard';
 import { PRODUCTS, CATEGORIES, COUNTRIES } from '@/data/products';
+import { Product } from '@/types';
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
 
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high'>('default');
 
+  // Dynamically load live products from MongoDB
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+            setProductsList(data.data);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load products from API:', err);
+      }
+    }
+    loadProducts();
+  }, []);
+
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(p => {
+    return productsList.filter(p => {
       // Category match
       if (selectedCategory !== 'all' && p.category !== selectedCategory) {
         return false;

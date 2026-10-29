@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
@@ -18,6 +18,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ProductCard } from '@/components/ProductCard';
 import { PRODUCTS } from '@/data/products';
+import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
 
 export default function ProductClient({ slug }: { slug: string }) {
@@ -27,7 +28,26 @@ export default function ProductClient({ slug }: { slug: string }) {
   const [activeTab, setActiveTab] = useState<'specs' | 'rules' | 'faq'>('specs');
   const [formatCopied, setFormatCopied] = useState(false);
 
-  const product = PRODUCTS.find(p => p.slug === slug);
+  const initialProd = PRODUCTS.find(p => p.slug === slug);
+  const [product, setProduct] = useState<Product | undefined>(initialProd);
+
+  // Dynamic MongoDB fetch
+  useEffect(() => {
+    async function fetchDynamic() {
+      try {
+        const res = await fetch(`/api/products/${slug}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data) {
+            setProduct(data.data);
+          }
+        }
+      } catch (e) {
+        // use initial
+      }
+    }
+    fetchDynamic();
+  }, [slug]);
 
   if (!product) {
     return (

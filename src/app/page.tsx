@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
@@ -21,17 +21,47 @@ import { HeroVisual } from '@/components/HeroVisual';
 import { useCart } from '@/context/CartContext';
 import { PRODUCTS, CATEGORIES } from '@/data/products';
 import { POSTS } from '@/data/posts';
+import { Product } from '@/types';
 
 export default function HomePage() {
   const router = useRouter();
   const { buyNow, addToCart } = useCart();
   const [selectedCat, setSelectedCat] = useState('all');
 
-  const featuredSpecial = PRODUCTS.find(p => p.id === 'bm-2500');
+  const [productsList, setProductsList] = useState<Product[]>(PRODUCTS);
+  const [heroSettings, setHeroSettings] = useState<any>(null);
+
+  useEffect(() => {
+    async function loadDynamic() {
+      try {
+        const [prodRes, settRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/settings'),
+        ]);
+        if (prodRes.ok) {
+          const pData = await prodRes.json();
+          if (pData.success && Array.isArray(pData.data) && pData.data.length > 0) {
+            setProductsList(pData.data);
+          }
+        }
+        if (settRes.ok) {
+          const sData = await settRes.json();
+          if (sData.success && sData.data) {
+            setHeroSettings(sData.data);
+          }
+        }
+      } catch (err) {
+        // use fallback
+      }
+    }
+    loadDynamic();
+  }, []);
+
+  const featuredSpecial = productsList.find(p => p.id === 'bm-2500') || productsList[0];
 
   const displayedProducts = selectedCat === 'all'
-    ? PRODUCTS.slice(0, 8)
-    : PRODUCTS.filter(p => p.category === selectedCat).slice(0, 8);
+    ? productsList.slice(0, 8)
+    : productsList.filter(p => p.category === selectedCat).slice(0, 8);
 
   return (
     <div className="min-h-screen bg-[#EDF0F2] flex flex-col text-[#0F172A]">
@@ -53,18 +83,28 @@ export default function HomePage() {
                 {/* Top Badge */}
                 <div className="inline-flex items-center gap-2 badge-calon text-xs py-1.5 px-4">
                   <span className="flex h-2 w-2 rounded-full bg-[#FBAD18] animate-pulse" />
-                  <span>Premium Meta & TikTok Advertising Assets</span>
+                  <span>{heroSettings?.announcementText || 'Premium Meta & TikTok Advertising Assets'}</span>
                 </div>
 
                 {/* Main Headline */}
                 <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] tracking-tight leading-[1.1]">
-                  Scale Your Meta Ads <br />
-                  <span className="text-gradient">Without Restrictions</span>
+                  {heroSettings?.heroTitle ? (
+                    heroSettings.heroTitle
+                  ) : (
+                    <>
+                      Scale Your Meta Ads <br />
+                      <span className="text-gradient">Without Restrictions</span>
+                    </>
+                  )}
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-[#475569] text-base sm:text-lg max-w-xl leading-relaxed font-normal">
-                  Buy high-spend Facebook Business Managers (BM2500, BM5), 2-line & 3-line reinstated advertising profiles, and verified assets with <strong className="text-[#0F172A] font-bold">24-hour guarantee</strong> and instant delivery.
+                  {heroSettings?.heroSubtitle || (
+                    <>
+                      Buy high-spend Facebook Business Managers (BM2500, BM5), 2-line & 3-line reinstated advertising profiles, and verified assets with <strong className="text-[#0F172A] font-bold">24-hour guarantee</strong> and instant delivery.
+                    </>
+                  )}
                 </p>
 
                 {/* CTA Buttons */}

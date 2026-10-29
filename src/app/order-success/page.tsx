@@ -56,18 +56,43 @@ function OrderSuccessContent() {
   const [txidSubmitted, setTxidSubmitted] = useState(false);
 
   useEffect(() => {
-    try {
-      const orders = JSON.parse(localStorage.getItem('bm4u_orders') || '[]');
-      const found = orders.find((o: StoredOrder) => o.orderId === orderId);
-      if (found) {
-        setOrder(found);
-        if (found.txid) {
-          setInputTxid(found.txid);
-          setTxidSubmitted(true);
+    // 1. Fetch from live MongoDB API
+    async function loadOrder() {
+      try {
+        const res = await fetch(`/api/orders/${orderId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data) {
+            setOrder(data.data);
+            if (data.data.txid) {
+              setInputTxid(data.data.txid);
+              setTxidSubmitted(true);
+            }
+            return;
+          }
         }
+      } catch (e) {
+        console.error('Fetch order error:', e);
       }
-    } catch {
-      // ignore
+
+      // Fallback to localStorage if offline
+      try {
+        const orders = JSON.parse(localStorage.getItem('bm4u_orders') || '[]');
+        const found = orders.find((o: StoredOrder) => o.orderId === orderId);
+        if (found) {
+          setOrder(found);
+          if (found.txid) {
+            setInputTxid(found.txid);
+            setTxidSubmitted(true);
+          }
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    if (orderId) {
+      loadOrder();
     }
   }, [orderId]);
 
@@ -97,11 +122,19 @@ function OrderSuccessContent() {
     }
   };
 
-  const handleSaveTxid = (e: React.FormEvent) => {
+  const handleSaveTxid = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputTxid.trim()) return;
 
     try {
+      // 1. Update MongoDB Atlas
+      await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ txid: inputTxid.trim() }),
+      });
+
+      // 2. Update local state & localStorage
       const orders = JSON.parse(localStorage.getItem('bm4u_orders') || '[]');
       const idx = orders.findIndex((o: StoredOrder) => o.orderId === orderId);
       if (idx !== -1) {
@@ -110,7 +143,7 @@ function OrderSuccessContent() {
       }
       setTxidSubmitted(true);
     } catch {
-      // ignore
+      setTxidSubmitted(true);
     }
   };
 
