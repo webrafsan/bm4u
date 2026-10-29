@@ -82,7 +82,7 @@ export const Navbar = () => {
               <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-white overflow-hidden p-0.5">
                 <Image
                   src="/logo-100.webp"
-                  alt="BM 4 U"
+                  alt="BM Shop"
                   width={38}
                   height={38}
                   className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform"
@@ -95,7 +95,7 @@ export const Navbar = () => {
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
               <span className="font-heading text-xl font-bold tracking-tight text-[#0F172A] group-hover:text-[#D97706] transition-colors">
-                BM 4 U
+                BM Shop
               </span>
               <span className="flex h-2 w-2 rounded-full bg-[#FBAD18] animate-pulse" />
             </div>

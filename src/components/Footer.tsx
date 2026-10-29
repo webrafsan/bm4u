@@ -18,7 +18,7 @@ export const Footer = () => {
                 <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-white overflow-hidden p-0.5">
                   <Image
                     src="/logo-100.webp"
-                    alt="BM 4 U"
+                    alt="BM Shop"
                     width={36}
                     height={36}
                     className="w-full h-full object-contain rounded-lg"
@@ -26,7 +26,7 @@ export const Footer = () => {
                 </div>
               </div>
               <span className="font-heading text-xl font-bold tracking-tight text-[#0F172A]">
-                BM 4 U
+                BM Shop
               </span>
             </Link>
             
