@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrdersCollection, getProductsCollection } from '@/lib/db';
 import { OrderRecord, OrderStatus } from '@/types';
+import { notifyNewOrder } from '@/lib/telegram';
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,6 +52,9 @@ export async function POST(req: NextRequest) {
     };
 
     const insertResult = await ordersCol.insertOne(newOrder);
+
+    // Trigger instant automated Telegram notification to admin
+    notifyNewOrder(newOrder).catch(err => console.error('Telegram order notification error:', err));
 
     // Decrement stock in MongoDB for purchased items
     for (const item of items) {

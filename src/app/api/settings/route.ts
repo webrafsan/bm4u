@@ -9,6 +9,8 @@ const DEFAULT_SETTINGS = {
   announcementText: '⚡ Instant Auto Delivery & 24H Full Replacement Guarantee Active',
   telegramUsername: 'bybm4u',
   telegramLink: 'https://t.me/bybm4u',
+  telegramBotToken: '',
+  telegramChatId: '',
   supportEmail: 'support@bm4u.net',
   replaceWarrantyHours: '24',
   replacePolicyTitle: 'Strict 24-Hour Technical Warranty',

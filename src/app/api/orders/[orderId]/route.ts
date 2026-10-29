@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrdersCollection } from '@/lib/db';
+import { notifyTxidSubmitted } from '@/lib/telegram';
 
 export async function GET(
   req: NextRequest,
@@ -72,6 +73,13 @@ export async function PATCH(
       return NextResponse.json(
         { success: false, error: 'Order not found' },
         { status: 404 }
+      );
+    }
+
+    // Trigger instant Telegram alert if TXID was submitted
+    if (body.txid) {
+      notifyTxidSubmitted(orderId.trim(), body.txid, updated.customer?.telegram).catch(err =>
+        console.error('Telegram TXID notification error:', err)
       );
     }
 
