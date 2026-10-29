@@ -1,28 +1,57 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { BookOpen, Calendar, Clock, ArrowRight, Search, Tag, Sparkles } from 'lucide-react';
 import { BlogPost } from '@/types';
-import { ALL_TAGS } from '@/data/posts';
 
 interface TipsListClientProps {
   posts: BlogPost[];
 }
 
-export function TipsListClient({ posts }: TipsListClientProps) {
-  const [selectedTag, setSelectedTag] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+function TipsListContent({ posts }: TipsListClientProps) {
+  const searchParams = useSearchParams();
+  const initialTag = searchParams.get('tag') || 'All';
+  const initialQuery = searchParams.get('q') || '';
+
+  const [selectedTag, setSelectedTag] = useState<string>(initialTag);
+  const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+
+  useEffect(() => {
+    if (initialTag && initialTag !== 'All') {
+      setSelectedTag(initialTag);
+    }
+  }, [initialTag]);
+
+  // Compute all available tags dynamically from live posts in database
+  const availableTags = useMemo(() => {
+    const set = new Set<string>();
+    posts.forEach(p => {
+      if (Array.isArray(p.tags)) {
+        p.tags.forEach(t => {
+          if (t && t.trim()) set.add(t.trim());
+        });
+      }
+    });
+    return ['All', ...Array.from(set)];
+  }, [posts]);
 
   const filteredPosts = useMemo(() => {
     return posts.filter(post => {
-      const matchesTag = selectedTag === 'All' || post.tags.includes(selectedTag) || post.category.toLowerCase() === selectedTag.toLowerCase();
+      const postTags = Array.isArray(post.tags) ? post.tags : [];
+      const matchesTag = 
+        selectedTag === 'All' || 
+        postTags.some(t => t.toLowerCase() === selectedTag.toLowerCase()) || 
+        post.category?.toLowerCase() === selectedTag.toLowerCase();
+
+      const q = searchQuery.toLowerCase().trim();
       const matchesSearch = 
-        searchQuery === '' ||
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        q === '' ||
+        post.title?.toLowerCase().includes(q) ||
+        post.excerpt?.toLowerCase().includes(q) ||
+        postTags.some(t => t.toLowerCase().includes(q));
 
       return matchesTag && matchesSearch;
     });
@@ -30,7 +59,7 @@ export function TipsListClient({ posts }: TipsListClientProps) {
 
   return (
     <div className="space-y-10">
-      {/* Search Bar & Tag Filter Controls */}
+      {/* Search Bar & Dynamic Tag Filter Controls */}
       <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
         {/* Search Input */}
         <div className="relative max-w-xl mx-auto">
@@ -45,30 +74,30 @@ export function TipsListClient({ posts }: TipsListClientProps) {
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-full w-5 h-5 flex items-center justify-center transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 bg-slate-200 hover:bg-slate-300 rounded-full w-5 h-5 flex items-center justify-center transition-colors cursor-pointer"
             >
               ✕
             </button>
           )}
         </div>
 
-        {/* Tag Pills Filter */}
+        {/* Dynamic Tag Pills Filter */}
         <div className="space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 justify-center">
             <Tag className="w-3.5 h-3.5 text-[#FBAD18]" />
-            <span>Filter by Topic &amp; Tags:</span>
+            <span>Filter by Topic &amp; Tags ({availableTags.length - 1} categories):</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-            {ALL_TAGS.map((tag) => {
-              const isActive = selectedTag === tag;
+            {availableTags.map((tag) => {
+              const isActive = selectedTag.toLowerCase() === tag.toLowerCase();
               return (
                 <button
                   key={tag}
                   onClick={() => setSelectedTag(tag)}
                   className={`text-xs px-3.5 py-1.5 rounded-full font-semibold transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? 'bg-[#FBAD18] text-slate-900 shadow-sm scale-105'
+                      ? 'bg-[#FBAD18] text-slate-900 shadow-sm scale-105 font-bold'
                       : 'bg-[#F1F5F9] text-slate-600 hover:bg-slate-200 hover:text-slate-900'
                   }`}
                 >
@@ -103,7 +132,7 @@ export function TipsListClient({ posts }: TipsListClientProps) {
 
       {/* Posts Grid */}
       {filteredPosts.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 max-w-md mx-auto">
+        <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 max-w-md mx-auto shadow-sm">
           <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
           <h3 className="font-heading text-lg font-bold text-slate-900 mb-2">No matching guides found</h3>
           <p className="text-xs text-slate-500 mb-6">
@@ -114,112 +143,118 @@ export function TipsListClient({ posts }: TipsListClientProps) {
               setSelectedTag('All');
               setSearchQuery('');
             }}
-            className="btn-action btn-primary text-xs py-2 px-5 font-bold"
+            className="btn-action btn-primary text-xs py-2 px-5 font-bold cursor-pointer"
           >
             Reset Filters
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post) => (
-            <article
-              key={post.slug}
-              className="bg-white rounded-3xl overflow-hidden flex flex-col justify-between border border-slate-200 shadow-sm hover:border-[#FBAD18]/60 hover:shadow-xl transition-all duration-300 group"
-              itemScope
-              itemType="https://schema.org/BlogPosting"
-            >
-              <div>
-                {/* Featured Image Banner */}
-                <Link href={`/tips/${post.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
-                  <Image
-                    src={post.image}
-                    alt={post.imageAlt}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="badge-calon text-[11px] py-1 px-2.5 font-bold backdrop-blur-md shadow-xs">
-                      {post.category}
-                    </span>
-                  </div>
-                </Link>
+          {filteredPosts.map((post) => {
+            const authorName = post.author?.name || 'BM4U Asset Team';
+            const bannerImage = post.image || '/tips/facebook-bm2500-guide.svg';
+            const postTags = Array.isArray(post.tags) ? post.tags : [];
 
-                {/* Content Area */}
-                <div className="p-6">
-                  {/* Meta stats */}
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-3">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" />
-                      <time dateTime={post.publishedTime}>{post.date}</time>
-                    </span>
-                    <span className="flex items-center gap-1 font-medium">
-                      <Clock className="w-3.5 h-3.5 text-amber-600" />
-                      {post.readTime}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <Link href={`/tips/${post.slug}`}>
-                    <h2
-                      itemProp="headline"
-                      className="font-heading text-lg sm:text-xl font-bold text-slate-900 group-hover:text-amber-600 transition-colors mb-3 leading-snug"
-                    >
-                      {post.title}
-                    </h2>
+            return (
+              <article
+                key={post.slug}
+                className="bg-white rounded-3xl overflow-hidden flex flex-col justify-between border border-slate-200 shadow-sm hover:border-[#FBAD18]/60 hover:shadow-xl transition-all duration-300 group"
+                itemScope
+                itemType="https://schema.org/BlogPosting"
+              >
+                <div>
+                  {/* Featured Image Banner */}
+                  <Link href={`/tips/${post.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
+                    <Image
+                      src={bannerImage}
+                      alt={post.imageAlt || post.title}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="badge-calon text-[11px] py-1 px-2.5 font-bold backdrop-blur-md shadow-xs">
+                        {post.category || 'Guides'}
+                      </span>
+                    </div>
                   </Link>
 
-                  {/* Excerpt */}
-                  <p
-                    itemProp="description"
-                    className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed mb-4"
-                  >
-                    {post.excerpt}
-                  </p>
-
-                  {/* Tags Pill Badges */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {post.tags.slice(0, 3).map((tag) => (
-                      <button
-                        key={tag}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setSelectedTag(tag);
-                        }}
-                        className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 hover:bg-[#FBAD18]/20 hover:text-slate-900 font-medium transition-colors cursor-pointer"
-                      >
-                        #{tag}
-                      </button>
-                    ))}
-                    {post.tags.length > 3 && (
-                      <span className="text-[10px] text-slate-400 self-center">
-                        +{post.tags.length - 3} more
+                  {/* Content Area */}
+                  <div className="p-6">
+                    {/* Meta stats */}
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-3">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-amber-600" />
+                        <time dateTime={post.publishedTime || ''}>{post.date}</time>
                       </span>
-                    )}
+                      <span className="flex items-center gap-1 font-medium">
+                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                        {post.readTime || '4 min read'}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <Link href={`/tips/${post.slug}`}>
+                      <h2
+                        itemProp="headline"
+                        className="font-heading text-lg sm:text-xl font-bold text-slate-900 group-hover:text-amber-600 transition-colors mb-3 leading-snug"
+                      >
+                        {post.title}
+                      </h2>
+                    </Link>
+
+                    {/* Excerpt */}
+                    <p
+                      itemProp="description"
+                      className="text-xs sm:text-sm text-slate-600 line-clamp-3 leading-relaxed mb-4"
+                    >
+                      {post.excerpt}
+                    </p>
+
+                    {/* Tags Pill Badges */}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {postTags.slice(0, 3).map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSelectedTag(tag);
+                          }}
+                          className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 hover:bg-[#FBAD18]/20 hover:text-slate-900 font-medium transition-colors cursor-pointer"
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                      {postTags.length > 3 && (
+                        <span className="text-[10px] text-slate-400 self-center">
+                          +{postTags.length - 3} more
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card Footer */}
-              <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between text-xs">
-                <div className="text-slate-500 text-[11px]">
-                  <span>By </span>
-                  <strong className="text-slate-800 font-semibold">{post.author.name}</strong>
+                {/* Card Footer */}
+                <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="text-slate-500 text-[11px]">
+                    <span>By </span>
+                    <strong className="text-slate-800 font-semibold">{authorName}</strong>
+                  </div>
+
+                  <Link
+                    href={`/tips/${post.slug}`}
+                    className="text-amber-600 hover:text-amber-700 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1.5"
+                  >
+                    <span>Read Guide</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
-
-                <Link
-                  href={`/tips/${post.slug}`}
-                  className="text-amber-600 hover:text-amber-700 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1.5"
-                >
-                  <span>Read Guide</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       )}
 
@@ -229,7 +264,7 @@ export function TipsListClient({ posts }: TipsListClientProps) {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FBAD18]/20 text-[#FBAD18] text-xs font-bold mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>BM4U Scaling Knowledge Hub</span>
+            <span>BM Shop Scaling Knowledge Hub</span>
           </div>
           <h2 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight mb-4">
             Ready to deploy high-limit advertising assets?
@@ -257,5 +292,13 @@ export function TipsListClient({ posts }: TipsListClientProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function TipsListClient({ posts }: TipsListClientProps) {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-xs text-slate-500">Loading guides &amp; blueprints...</div>}>
+      <TipsListContent posts={posts} />
+    </Suspense>
   );
 }

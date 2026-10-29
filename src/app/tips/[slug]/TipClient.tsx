@@ -11,11 +11,11 @@ import {
   Tag as TagIcon, 
   Share2, 
   CheckCircle, 
-  ArrowRight,
-  ShieldCheck,
-  Bookmark,
-  Sparkles,
-  ExternalLink
+  ArrowRight, 
+  ShieldCheck, 
+  Bookmark, 
+  Sparkles, 
+  ExternalLink 
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
@@ -32,16 +32,31 @@ interface TipClientProps {
 export default function TipClient({ slug, post, relatedPosts }: TipClientProps) {
   const [copied, setCopied] = useState(false);
 
+  // Author & Image fallbacks
+  const authorName = post.author?.name || 'BM4U Asset Team';
+  const authorRole = post.author?.role || 'Senior Media Buying Architect';
+  const bannerImage = post.image || '/tips/facebook-bm2500-guide.svg';
+  const bannerAlt = post.imageAlt || post.title;
+  const postTags = Array.isArray(post.tags) ? post.tags : [];
+  const postContent = Array.isArray(post.content) ? post.content : [post.content].filter(Boolean);
+
   // Find related product if linked
   const relatedProduct = post.relatedProductSlug 
-    ? PRODUCTS.find(p => p.slug === post.relatedProductSlug)
-    : null;
+    ? PRODUCTS.find(p => p.slug === post.relatedProductSlug || p.id === post.relatedProductSlug)
+    : PRODUCTS.find(p => p.category === 'business-manager' || p.category === 'verified-bm') || null;
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
       navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  const handleShareTelegram = () => {
+    if (typeof window !== 'undefined') {
+      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`;
+      window.open(shareUrl, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -66,17 +81,17 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
           <header className="space-y-5 mb-8">
             <div className="flex flex-wrap items-center gap-3">
               <span className="badge-calon text-xs py-1 px-3.5 font-bold shadow-xs">
-                {post.category}
+                {post.category || 'Guides'}
               </span>
               <span className="text-xs text-slate-400">•</span>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                 <Clock className="w-3.5 h-3.5 text-amber-600" />
-                <span>{post.readTime}</span>
+                <span>{post.readTime || '4 min read'}</span>
               </div>
               <span className="text-xs text-slate-400">•</span>
               <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
                 <Calendar className="w-3.5 h-3.5 text-amber-600" />
-                <time dateTime={post.publishedTime}>{post.date}</time>
+                <time dateTime={post.publishedTime || ''}>{post.date}</time>
               </div>
             </div>
 
@@ -95,20 +110,29 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
             <div className="pt-4 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FBAD18] to-[#D97706] flex items-center justify-center text-slate-950 font-bold text-sm shadow-xs">
-                  {post.author.name.slice(0, 2).toUpperCase()}
+                  {authorName.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900" itemProp="author">
-                    {post.author.name}
+                    {authorName}
                   </div>
                   <div className="text-[11px] text-slate-500">
-                    {post.author.role}
+                    {authorRole}
                   </div>
                 </div>
               </div>
 
               {/* Share and Tags quick actions */}
               <div className="flex items-center gap-2">
+                <button
+                  onClick={handleShareTelegram}
+                  className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-[#0088cc] hover:border-slate-300 transition-all shadow-xs cursor-pointer"
+                  title="Share on Telegram"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#0088cc]" />
+                  <span className="font-semibold">Telegram</span>
+                </button>
+
                 <button
                   onClick={handleCopyLink}
                   className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 transition-all shadow-xs cursor-pointer"
@@ -133,8 +157,8 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
           {/* Featured Image Hero Banner */}
           <div className="mb-10 rounded-3xl overflow-hidden border border-slate-200 shadow-lg bg-slate-950 relative aspect-[16/9] w-full">
             <Image
-              src={post.image}
-              alt={post.imageAlt}
+              src={bannerImage}
+              alt={bannerAlt}
               fill
               priority
               unoptimized
@@ -143,7 +167,7 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
             />
           </div>
 
-          {/* Key Takeaways Callout (Google Featured Snippet Optimizer) */}
+          {/* Key Takeaways Callout */}
           <div className="mb-10 bg-amber-500/10 border-l-4 border-[#FBAD18] rounded-2xl p-6 sm:p-7 text-slate-800">
             <div className="flex items-center gap-2 text-amber-800 font-bold text-sm mb-3">
               <Sparkles className="w-4 h-4 text-[#D97706]" />
@@ -167,7 +191,7 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
 
           {/* Main Article Body */}
           <div className="bg-white rounded-3xl p-6 sm:p-12 border border-slate-200 shadow-sm space-y-6 text-sm sm:text-base leading-relaxed text-slate-700">
-            {post.content.map((paragraph, idx) => {
+            {postContent.map((paragraph, idx) => {
               if (paragraph.startsWith('### ')) {
                 return (
                   <h2
@@ -202,7 +226,7 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
             })}
           </div>
 
-          {/* Related Product Callout Box (Internal Linking for SEO & Conversion) */}
+          {/* Related Product Callout Box */}
           {relatedProduct && (
             <div className="mt-10 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 sm:p-8 text-white border border-slate-700 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="space-y-2 text-center sm:text-left">
@@ -233,36 +257,38 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
             </div>
           )}
 
-          {/* Tags Section */}
-          <div className="mt-8 bg-white rounded-2xl p-6 border border-slate-200 shadow-xs">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-800 mb-3">
-              <TagIcon className="w-3.5 h-3.5 text-[#FBAD18]" />
-              <span>Article Topics &amp; Search Keywords:</span>
+          {/* Dynamic Tags Section */}
+          {postTags.length > 0 && (
+            <div className="mt-8 bg-white rounded-2xl p-6 border border-slate-200 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-800 mb-3">
+                <TagIcon className="w-3.5 h-3.5 text-[#FBAD18]" />
+                <span>Article Topics &amp; Search Keywords:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {postTags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/tips?tag=${encodeURIComponent(tag)}`}
+                    className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FBAD18]/20 text-slate-700 hover:text-slate-900 font-medium transition-colors border border-slate-200"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/tips`}
-                  className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FBAD18]/20 text-slate-700 hover:text-slate-900 font-medium transition-colors border border-slate-200"
-                >
-                  #{tag}
-                </Link>
-              ))}
-            </div>
-          </div>
+          )}
 
-          {/* Author Bio Box (E-E-A-T Signal for Google Search) */}
+          {/* Author Bio Box */}
           <div className="mt-8 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xs flex items-center gap-5">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FBAD18] to-[#D97706] flex items-center justify-center text-slate-950 font-black text-xl shrink-0 shadow-md">
               BM
             </div>
             <div className="space-y-1">
               <h4 className="font-heading text-base font-bold text-slate-900">
-                Written by {post.author.name}
+                Written by {authorName}
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed">
-                The BM4U engineering and media buying team tests thousands of Meta ad accounts, Business Managers, and payment gateways annually to deliver battle-tested scaling blueprints.
+                The BM Shop engineering and media buying team tests thousands of Meta ad accounts, Business Managers, and payment gateways annually to deliver battle-tested scaling blueprints.
               </p>
             </div>
           </div>
@@ -290,50 +316,53 @@ export default function TipClient({ slug, post, relatedPosts }: TipClientProps) 
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((related) => (
-                  <article
-                    key={related.slug}
-                    className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover:border-[#FBAD18] hover:shadow-md transition-all group flex flex-col justify-between"
-                  >
-                    <div>
-                      <Link href={`/tips/${related.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
-                        <Image
-                          src={related.image}
-                          alt={related.imageAlt}
-                          fill
-                          unoptimized
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <span className="absolute top-2 left-2 badge-calon text-[10px] py-0.5 px-2">
-                          {related.category}
-                        </span>
-                      </Link>
-
-                      <div className="p-4">
-                        <Link href={`/tips/${related.slug}`}>
-                          <h4 className="font-heading text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug mb-2">
-                            {related.title}
-                          </h4>
+                {relatedPosts.map((related) => {
+                  const relBanner = related.image || '/tips/facebook-bm2500-guide.svg';
+                  return (
+                    <article
+                      key={related.slug}
+                      className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xs hover:border-[#FBAD18] hover:shadow-md transition-all group flex flex-col justify-between"
+                    >
+                      <div>
+                        <Link href={`/tips/${related.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
+                          <Image
+                            src={relBanner}
+                            alt={related.imageAlt || related.title}
+                            fill
+                            unoptimized
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <span className="absolute top-2 left-2 badge-calon text-[10px] py-0.5 px-2">
+                            {related.category || 'Guides'}
+                          </span>
                         </Link>
-                        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                          {related.excerpt}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                      <span>{related.readTime}</span>
-                      <Link
-                        href={`/tips/${related.slug}`}
-                        className="text-amber-600 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1"
-                      >
-                        <span>Read</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  </article>
-                ))}
+                        <div className="p-4">
+                          <Link href={`/tips/${related.slug}`}>
+                            <h4 className="font-heading text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug mb-2">
+                              {related.title}
+                            </h4>
+                          </Link>
+                          <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                            {related.excerpt}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="px-4 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                        <span>{related.readTime || '4 min read'}</span>
+                        <Link
+                          href={`/tips/${related.slug}`}
+                          className="text-amber-600 font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-1"
+                        >
+                          <span>Read</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           )}

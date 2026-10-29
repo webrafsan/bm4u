@@ -41,14 +41,29 @@ export async function PUT(
       query = { $or: [{ slug }, { _id: new ObjectId(slug) }] };
     }
 
+    const now = new Date().toISOString();
     const updateData: any = {
       ...body,
-      updatedAt: new Date().toISOString(),
+      modifiedTime: now,
+      updatedAt: now,
     };
     delete updateData._id;
 
     if (updateData.content && !Array.isArray(updateData.content)) {
-      updateData.content = updateData.content.split('\n\n').filter(Boolean);
+      updateData.content = updateData.content.split('\n\n').map((c: string) => c.trim()).filter(Boolean);
+    }
+
+    if (typeof updateData.tags === 'string') {
+      updateData.tags = updateData.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+    }
+
+    if (updateData.authorName) {
+      updateData.author = {
+        name: updateData.authorName,
+        role: updateData.authorRole || 'Senior Media Buying Architect',
+      };
+      delete updateData.authorName;
+      delete updateData.authorRole;
     }
 
     const result = await postsCol.findOneAndUpdate(

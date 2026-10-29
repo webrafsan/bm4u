@@ -6,7 +6,7 @@ import { BlogPost } from '@/types';
 export async function GET(req: NextRequest) {
   try {
     const postsCol = await getPostsCollection();
-    let posts = await postsCol.find({}).sort({ createdAt: -1 }).toArray();
+    let posts = await postsCol.find({}).sort({ publishedTime: -1, createdAt: -1 }).toArray();
 
     // Auto-seed if database is empty on first query
     if (posts.length === 0) {
@@ -16,21 +16,31 @@ export async function GET(req: NextRequest) {
         updatedAt: new Date().toISOString(),
       }));
       await postsCol.insertMany(docs);
-      posts = await postsCol.find({}).sort({ createdAt: -1 }).toArray();
+      posts = await postsCol.find({}).sort({ publishedTime: -1, createdAt: -1 }).toArray();
     }
 
     const { searchParams } = new URL(req.url);
     const category = searchParams.get('category');
+    const tag = searchParams.get('tag');
     const q = searchParams.get('q')?.toLowerCase();
 
     let filtered = posts;
+
     if (category && category !== 'all') {
       filtered = filtered.filter(p => p.category?.toLowerCase() === category.toLowerCase());
     }
+
+    if (tag && tag !== 'All') {
+      filtered = filtered.filter(p => 
+        Array.isArray(p.tags) && p.tags.some((t: string) => t.toLowerCase() === tag.toLowerCase())
+      );
+    }
+
     if (q) {
       filtered = filtered.filter(p =>
         p.title?.toLowerCase().includes(q) ||
-        p.excerpt?.toLowerCase().includes(q)
+        p.excerpt?.toLowerCase().includes(q) ||
+        (Array.isArray(p.tags) && p.tags.some((t: string) => t.toLowerCase().includes(q)))
       );
     }
 
@@ -65,18 +75,51 @@ export async function POST(req: NextRequest) {
     const existing = await postsCol.findOne({ slug });
     const finalSlug = existing ? `${slug}-${Date.now()}` : slug;
 
+    // Normalize tags
+    let tagsArray: string[] = [];
+    if (Array.isArray(body.tags)) {
+      tagsArray = body.tags.map((t: string) => String(t).trim()).filter(Boolean);
+    } else if (typeof body.tags === 'string') {
+      tagsArray = body.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+    }
+
+    // Normalize author
+    const author = {
+      name: body.author?.name || body.authorName || 'BM4U Asset Team',
+      role: body.author?.role || body.authorRole || 'Senior Media Buying Architect',
+      avatar: body.author?.avatar || undefined,
+    };
+
+    // Normalize content
+    let contentArray: string[] = [];
+    if (Array.isArray(body.content)) {
+      contentArray = body.content.map((c: string) => String(c).trim()).filter(Boolean);
+    } else if (typeof body.content === 'string') {
+      contentArray = body.content.split('\n\n').map(c => c.trim()).filter(Boolean);
+    }
+
+    const now = new Date().toISOString();
+    const dateFormatted = body.date || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
     const newPost: BlogPost & { createdAt: string; updatedAt: string } = {
       slug: finalSlug,
       title: body.title,
-      category: body.category || 'Guides',
+      metaTitle: body.metaTitle || `${body.title} | BM Shop Tips`,
+      metaDescription: body.metaDescription || body.excerpt || '',
+      date: dateFormatted,
+      publishedTime: body.publishedTime || now,
+      modifiedTime: now,
       readTime: body.readTime || '4 min read',
-      date: body.date || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       excerpt: body.excerpt || '',
-      content: Array.isArray(body.content) 
-        ? body.content 
-        : (body.content ? body.content.split('\n\n').filter(Boolean) : []),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      content: contentArray,
+      category: body.category || 'Guides',
+      image: body.image || '/tips/facebook-bm2500-guide.svg',
+      imageAlt: body.imageAlt || body.title,
+      tags: tagsArray.length > 0 ? tagsArray : ['Meta Ads', 'Guides'],
+      author,
+      relatedProductSlug: body.relatedProductSlug || undefined,
+      createdAt: now,
+      updatedAt: now,
     };
 
     const result = await postsCol.insertOne(newPost);

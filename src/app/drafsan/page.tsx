@@ -105,11 +105,19 @@ export default function AdminDashboardPage() {
   const [postForm, setPostForm] = useState({
     title: '',
     slug: '',
-    category: 'Guides',
-    readTime: '4 min read',
+    category: 'Scaling',
+    readTime: '5 min read',
     date: '',
     excerpt: '',
     content: '',
+    tags: '',
+    image: '',
+    imageAlt: '',
+    authorName: 'BM4U Asset Team',
+    authorRole: 'Senior Media Buying Architect',
+    relatedProductSlug: '',
+    metaTitle: '',
+    metaDescription: '',
   });
 
   // Copied alert state
@@ -440,6 +448,19 @@ export default function AdminDashboardPage() {
       fetchData();
     } catch (err) {
       console.error('Seed error:', err);
+    }
+  };
+
+  // Sync / Seed Blog Guides into MongoDB
+  const handleSeedPosts = async (force: boolean = true) => {
+    if (!confirm('Sync and overwrite all 25 default blueprint guides from codebase into MongoDB Atlas?')) return;
+    try {
+      const res = await fetch(`/api/seed?type=posts&force=${force}`, { method: 'POST' });
+      const data = await res.json();
+      alert(data.message || 'Posts synced successfully!');
+      fetchData();
+    } catch (err) {
+      console.error('Failed to sync posts:', err);
     }
   };
 
@@ -1262,20 +1283,37 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <button
+                  onClick={() => handleSeedPosts(true)}
+                  className="py-2 px-3 bg-white border border-[#CBD5E1] text-[#0F172A] font-bold rounded-xl text-xs flex items-center gap-1.5 hover:border-[#FBAD18] shadow-xs cursor-pointer"
+                  title="Sync and restore all 25 default blueprint guides from codebase into MongoDB Atlas"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-[#D97706]" />
+                  <span>Sync 25 Guides</span>
+                </button>
+
+                <button
                   onClick={() => {
                     setEditingPost(null);
                     setPostForm({
                       title: '',
                       slug: '',
-                      category: 'Guides',
-                      readTime: '4 min read',
+                      category: 'Scaling',
+                      readTime: '5 min read',
                       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
                       excerpt: '',
                       content: '',
+                      tags: 'Meta Ads, Scaling, BM2500',
+                      image: '/tips/facebook-bm2500-guide.svg',
+                      imageAlt: '',
+                      authorName: 'BM4U Asset Team',
+                      authorRole: 'Senior Media Buying Architect',
+                      relatedProductSlug: '',
+                      metaTitle: '',
+                      metaDescription: '',
                     });
                     setIsAddPostModalOpen(true);
                   }}
-                  className="py-2 px-3.5 bg-gradient-to-r from-[#FBAD18] to-[#E69D0E] text-[#0F172A] font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-sm"
+                  className="py-2 px-3.5 bg-gradient-to-r from-[#FBAD18] to-[#E69D0E] text-[#0F172A] font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>New Guide / Tip</span>
@@ -1317,24 +1355,32 @@ export default function AdminDashboardPage() {
                         onClick={() => {
                           setEditingPost(p);
                           setPostForm({
-                            title: p.title,
-                            slug: p.slug,
-                            category: p.category,
-                            readTime: p.readTime,
-                            date: p.date,
-                            excerpt: p.excerpt,
+                            title: p.title || '',
+                            slug: p.slug || '',
+                            category: p.category || 'Guides',
+                            readTime: p.readTime || '4 min read',
+                            date: p.date || '',
+                            excerpt: p.excerpt || '',
                             content: Array.isArray(p.content) ? p.content.join('\n\n') : (p.content || ''),
+                            tags: Array.isArray(p.tags) ? p.tags.join(', ') : '',
+                            image: p.image || '',
+                            imageAlt: p.imageAlt || '',
+                            authorName: p.author?.name || 'BM4U Asset Team',
+                            authorRole: p.author?.role || 'Senior Media Buying Architect',
+                            relatedProductSlug: p.relatedProductSlug || '',
+                            metaTitle: p.metaTitle || '',
+                            metaDescription: p.metaDescription || '',
                           });
                           setIsAddPostModalOpen(true);
                         }}
-                        className="p-1.5 text-[#64748B] hover:text-[#0F172A] rounded hover:bg-[#F1F5F9]"
+                        className="p-1.5 text-[#64748B] hover:text-[#0F172A] rounded hover:bg-[#F1F5F9] cursor-pointer"
                         title="Edit Guide"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeletePost(p.slug, p.title)}
-                        className="p-1.5 text-red-400 hover:text-red-600 rounded hover:bg-red-50"
+                        className="p-1.5 text-red-400 hover:text-red-600 rounded hover:bg-red-50 cursor-pointer"
                         title="Delete Guide"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1348,18 +1394,21 @@ export default function AdminDashboardPage() {
             {/* Post Modal */}
             {isAddPostModalOpen && (
               <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#CBD5E1] my-8 space-y-4">
+                <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[#CBD5E1] my-8 space-y-4 max-h-[90vh] overflow-y-auto">
                   <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-3">
-                    <h3 className="font-heading text-lg font-extrabold text-[#0F172A]">
-                      {editingPost ? 'Edit Guide / Tip Article' : 'Create New Guide in MongoDB'}
-                    </h3>
-                    <button onClick={() => setIsAddPostModalOpen(false)}>
+                    <div>
+                      <h3 className="font-heading text-lg font-extrabold text-[#0F172A]">
+                        {editingPost ? 'Edit Guide / Tip Article' : 'Create New Guide in MongoDB'}
+                      </h3>
+                      <p className="text-xs text-[#64748B]">All changes are saved directly to MongoDB Atlas and published live.</p>
+                    </div>
+                    <button onClick={() => setIsAddPostModalOpen(false)} className="cursor-pointer">
                       <X className="w-5 h-5 text-[#94A3B8]" />
                     </button>
                   </div>
                   <form onSubmit={handleSavePost} className="space-y-4 text-xs">
                     <div>
-                      <label className="block font-bold text-[#475569] mb-1">Article Title</label>
+                      <label className="block font-bold text-[#475569] mb-1">Article Title *</label>
                       <input
                         type="text"
                         required
@@ -1369,17 +1418,31 @@ export default function AdminDashboardPage() {
                         className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium focus:ring-2 focus:ring-[#FBAD18]"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">URL Slug (Leave blank to auto-generate)</label>
+                        <input
+                          type="text"
+                          value={postForm.slug}
+                          onChange={e => setPostForm({ ...postForm, slug: e.target.value })}
+                          placeholder="e.g. how-to-add-backup-admin-into-facebook-bm"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
                       <div>
                         <label className="block font-bold text-[#475569] mb-1">Category</label>
                         <input
                           type="text"
                           value={postForm.category}
                           onChange={e => setPostForm({ ...postForm, category: e.target.value })}
-                          placeholder="e.g. Guides, Security, Architecture"
+                          placeholder="e.g. Scaling, Security, Warmup, Tools"
                           className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
                         />
                       </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
                         <label className="block font-bold text-[#475569] mb-1">Read Time</label>
                         <input
@@ -1390,41 +1453,134 @@ export default function AdminDashboardPage() {
                           className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
                         />
                       </div>
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Author Name</label>
+                        <input
+                          type="text"
+                          value={postForm.authorName}
+                          onChange={e => setPostForm({ ...postForm, authorName: e.target.value })}
+                          placeholder="e.g. BM4U Asset Team"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Author Role</label>
+                        <input
+                          type="text"
+                          value={postForm.authorRole}
+                          onChange={e => setPostForm({ ...postForm, authorRole: e.target.value })}
+                          placeholder="e.g. Senior Media Buying Architect"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
                     </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Tags (Comma-separated)</label>
+                        <input
+                          type="text"
+                          value={postForm.tags}
+                          onChange={e => setPostForm({ ...postForm, tags: e.target.value })}
+                          placeholder="e.g. BM2500, Meta Ads, Daily Spend Limit, Scaling"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Related Product Slug (Optional)</label>
+                        <input
+                          type="text"
+                          value={postForm.relatedProductSlug}
+                          onChange={e => setPostForm({ ...postForm, relatedProductSlug: e.target.value })}
+                          placeholder="e.g. buy-facebook-bm2500-premium-meta-business-manager"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Image / Banner URL</label>
+                        <input
+                          type="text"
+                          value={postForm.image}
+                          onChange={e => setPostForm({ ...postForm, image: e.target.value })}
+                          placeholder="e.g. /tips/facebook-bm2500-guide.svg"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">Image Alt Text</label>
+                        <input
+                          type="text"
+                          value={postForm.imageAlt}
+                          onChange={e => setPostForm({ ...postForm, imageAlt: e.target.value })}
+                          placeholder="Descriptive alt text for Google SEO"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">SEO Meta Title (Optional)</label>
+                        <input
+                          type="text"
+                          value={postForm.metaTitle}
+                          onChange={e => setPostForm({ ...postForm, metaTitle: e.target.value })}
+                          placeholder="Custom title tag for Google"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-bold text-[#475569] mb-1">SEO Meta Description (Optional)</label>
+                        <input
+                          type="text"
+                          value={postForm.metaDescription}
+                          onChange={e => setPostForm({ ...postForm, metaDescription: e.target.value })}
+                          placeholder="Meta description for search results snippet"
+                          className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block font-bold text-[#475569] mb-1">Short Excerpt / Summary</label>
+                      <label className="block font-bold text-[#475569] mb-1">Short Excerpt / Summary *</label>
                       <textarea
                         rows={2}
+                        required
                         value={postForm.excerpt}
                         onChange={e => setPostForm({ ...postForm, excerpt: e.target.value })}
                         placeholder="A brief summary shown on the tips list card..."
                         className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-medium"
                       />
                     </div>
+
                     <div>
                       <label className="block font-bold text-[#475569] mb-1">
-                        Article Content (Separate paragraphs with blank lines)
+                        Article Content (Separate paragraphs with blank lines) *
                       </label>
                       <textarea
-                        rows={8}
+                        rows={9}
                         required
                         value={postForm.content}
                         onChange={e => setPostForm({ ...postForm, content: e.target.value })}
-                        placeholder="Write your article paragraphs here. Markdown headings (###) and bullet lists are supported."
-                        className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-mono"
+                        placeholder="Write your article paragraphs here. Markdown headings (###), bullet lists (- item), and numbered steps (1. step) are supported."
+                        className="w-full p-2.5 bg-[#F8FAFC] border border-[#CBD5E1] rounded-xl font-mono text-xs"
                       />
                     </div>
+
                     <div className="flex justify-end gap-2 pt-3 border-t border-[#F1F5F9]">
                       <button
                         type="button"
                         onClick={() => setIsAddPostModalOpen(false)}
-                        className="px-4 py-2 border border-[#CBD5E1] text-[#475569] font-bold rounded-xl"
+                        className="px-4 py-2 border border-[#CBD5E1] text-[#475569] font-bold rounded-xl cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="px-5 py-2 bg-gradient-to-r from-[#FBAD18] to-[#E69D0E] text-[#0F172A] font-bold rounded-xl shadow"
+                        className="px-5 py-2 bg-gradient-to-r from-[#FBAD18] to-[#E69D0E] text-[#0F172A] font-bold rounded-xl shadow cursor-pointer"
                       >
                         {editingPost ? 'Save Article' : 'Publish Article'}
                       </button>

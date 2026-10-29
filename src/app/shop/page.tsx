@@ -1,24 +1,50 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Search, Globe, ShoppingBag, X, ArrowUpDown } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ProductCard } from '@/components/ProductCard';
 import { PRODUCTS, CATEGORIES, COUNTRIES } from '@/data/products';
+import { Product } from '@/types';
 
 function ShopContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || 'all';
 
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'default' | 'price-low' | 'price-high'>('default');
 
+  // Fetch live products from MongoDB Atlas
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setProducts(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const dynamicCategories = useMemo(() => {
+    return CATEGORIES.map(cat => {
+      if (cat.id === 'all') {
+        return { ...cat, count: products.length };
+      }
+      return {
+        ...cat,
+        count: products.filter(p => p.category === cat.id).length,
+      };
+    });
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(p => {
+    return products.filter(p => {
       // Category match
       if (selectedCategory !== 'all' && p.category !== selectedCategory) {
         return false;
@@ -47,7 +73,7 @@ function ShopContent() {
       if (sortBy === 'price-high') return b.price - a.price;
       return 0;
     });
-  }, [selectedCategory, selectedCountry, searchQuery, sortBy]);
+  }, [products, selectedCategory, selectedCountry, searchQuery, sortBy]);
 
   const resetFilters = () => {
     setSelectedCategory('all');
@@ -133,7 +159,7 @@ function ShopContent() {
 
           {/* Category Tabs Bar */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
-            {CATEGORIES.map(cat => {
+            {dynamicCategories.map(cat => {
               const active = selectedCategory === cat.id;
               return (
                 <button
@@ -184,7 +210,7 @@ function ShopContent() {
             <p className="text-xs text-[#64748B] mb-6">
               Try adjusting your search criteria, country filter, or category selection.
             </p>
-            <button onClick={resetFilters} className="btn-action btn-primary text-xs py-2 px-6 rounded-xl font-bold">
+            <button onClick={resetFilters} className="btn-action btn-primary text-xs py-2 px-6 rounded-xl font-bold cursor-pointer">
               Reset Filters
             </button>
           </div>
