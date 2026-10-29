@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { 
   ShieldCheck, 
@@ -385,32 +386,69 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {POSTS.map(post => (
-                <div
+              {POSTS.slice(0, 3).map(post => (
+                <article
                   key={post.slug}
-                  className="card-glass rounded-2xl p-6 border border-[#CBD5E1] flex flex-col justify-between hover:border-[#FBAD18] transition-all bg-white shadow-xs"
+                  className="rounded-3xl overflow-hidden border border-[#CBD5E1] flex flex-col justify-between hover:border-[#FBAD18] hover:shadow-lg transition-all duration-300 bg-white shadow-xs group"
                 >
                   <div>
-                    <span className="badge-calon text-[10px] py-0.5 px-2 mb-3 inline-block">
-                      {post.category}
-                    </span>
-                    <Link href={`/tips/${post.slug}`}>
-                      <h3 className="font-heading text-base font-bold text-[#0F172A] hover:text-[#D97706] transition-colors mb-2 line-clamp-2">
-                        {post.title}
-                      </h3>
+                    <Link href={`/tips/${post.slug}`} className="block relative aspect-[16/9] w-full overflow-hidden bg-slate-950">
+                      <Image
+                        src={post.image}
+                        alt={post.imageAlt}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-2.5 left-2.5">
+                        <span className="badge-calon text-[10px] py-0.5 px-2 font-bold backdrop-blur-md">
+                          {post.category}
+                        </span>
+                      </div>
                     </Link>
-                    <p className="text-xs text-[#475569] line-clamp-3 leading-relaxed mb-4">
-                      {post.excerpt}
-                    </p>
+
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500 mb-2">
+                        <span>{post.date}</span>
+                        <span>•</span>
+                        <span>{post.readTime}</span>
+                      </div>
+
+                      <Link href={`/tips/${post.slug}`}>
+                        <h3 className="font-heading text-base font-bold text-[#0F172A] group-hover:text-[#D97706] transition-colors mb-2 line-clamp-2 leading-snug">
+                          {post.title}
+                        </h3>
+                      </Link>
+
+                      <p className="text-xs text-[#475569] line-clamp-2 leading-relaxed mb-4">
+                        {post.excerpt}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {post.tags.slice(0, 2).map(tag => (
+                          <span
+                            key={tag}
+                            className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <Link
-                    href={`/tips/${post.slug}`}
-                    className="text-xs text-[#D97706] font-bold flex items-center gap-1 hover:underline"
-                  >
-                    <span>Read Article</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+
+                  <div className="px-5 py-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="text-[11px] text-slate-500">By {post.author.name}</span>
+                    <Link
+                      href={`/tips/${post.slug}`}
+                      className="text-xs text-[#D97706] font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform"
+                    >
+                      <span>Read Guide</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </article>
               ))}
             </div>
           </div>

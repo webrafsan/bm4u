@@ -33,11 +33,24 @@ export interface CartItem {
 export interface BlogPost {
   slug: string;
   title: string;
+  metaTitle?: string;
+  metaDescription?: string;
   date: string;
+  publishedTime: string;
+  modifiedTime: string;
   readTime: string;
   excerpt: string;
   content: string[];
   category: string;
+  image: string;
+  imageAlt: string;
+  tags: string[];
+  author: {
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+  relatedProductSlug?: string;
 }
 
 export interface UIDCheckResult {

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19" />
+      <stop offset="50%" stop-color="#141E33" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="goldGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#FBAD18" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="cardGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95" />
+    </linearGradient>
+    <filter id="shadow4" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.55" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg4)" />
+  <circle cx="200" cy="180" r="280" fill="#EC4899" opacity="0.07" filter="blur(70px)" />
+  <circle cx="1000" cy="420" r="280" fill="#FBAD18" opacity="0.09" filter="blur(70px)" />
+
+  <g stroke="#334155" stroke-opacity="0.12" stroke-width="1">
+    <line x1="0" y1="126" x2="1200" y2="126" />
+    <line x1="0" y1="252" x2="1200" y2="252" />
+    <line x1="0" y1="378" x2="1200" y2="378" />
+    <line x1="0" y1="504" x2="1200" y2="504" />
+    <line x1="240" y1="0" x2="240" y2="630" />
+    <line x1="480" y1="0" x2="480" y2="630" />
+    <line x1="720" y1="0" x2="720" y2="630" />
+    <line x1="960" y1="0" x2="960" y2="630" />
+  </g>
+
+  <!-- Top Badge -->
+  <g transform="translate(100, 75)">
+    <rect width="250" height="38" rx="19" fill="#1E293B" stroke="#EC4899" stroke-width="1.5" stroke-opacity="0.4" />
+    <circle cx="22" cy="19" r="6" fill="#EC4899" />
+    <text x="36" y="24" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5">IDENTITY VERIFICATION</text>
+  </g>
+
+  <!-- Title & Subtitle -->
+  <text x="100" y="175" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="44" font-weight="800" letter-spacing="-0.5">
+    2-Line vs 3-Line Reinstated
+  </text>
+  <text x="100" y="235" fill="url(#goldGrad4)" font-family="system-ui, sans-serif" font-size="38" font-weight="800" letter-spacing="-0.5">
+    Meta Accounts Compared
+  </text>
+  <text x="100" y="290" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="18" font-weight="400">
+    Understand ID verification tiers, trust scores &amp; why 3-line accounts survive ban waves.
+  </text>
+
+  <!-- Tags Pill Row -->
+  <g transform="translate(100, 335)">
+    <rect x="0" y="0" width="130" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="14" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#Reinstated</text>
+
+    <rect x="140" y="0" width="115" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="154" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#2-Line-BM</text>
+
+    <rect x="265" y="0" width="125" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="280" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#3-Line-ID</text>
+
+    <rect x="400" y="0" width="145" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="415" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#BanProtection</text>
+  </g>
+
+  <!-- Right Visual Comparison Card -->
+  <g transform="translate(720, 110)" filter="url(#shadow4)">
+    <rect width="380" height="420" rx="24" fill="url(#cardGrad4)" stroke="#334155" stroke-width="1.5" />
+
+    <!-- Card Header -->
+    <rect width="380" height="60" rx="24" fill="#0F172A" />
+    <path d="M0 40 h380 v20 h-380 z" fill="#0F172A" />
+    <circle cx="35" cy="30" r="14" fill="#EC4899" opacity="0.2" />
+    <text x="29" y="36" fill="#EC4899" font-family="system-ui, sans-serif" font-size="14" font-weight="800">ID</text>
+    <text x="58" y="35" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="14" font-weight="700">Meta Account Quality Check</text>
+
+    <!-- 2-Line Box -->
+    <g transform="translate(25, 75)">
+      <rect width="330" height="110" rx="14" fill="#0B0F19" stroke="#3B82F6" stroke-width="1.5" />
+      <text x="20" y="30" fill="#60A5FA" font-family="system-ui, sans-serif" font-size="13" font-weight="800">2-LINE REINSTATED (ID VERIFIED)</text>
+      <text x="20" y="55" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">✓ Passed Initial ID Verification Review</text>
+      <text x="20" y="78" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">✓ Green Shield in Account Quality</text>
+      <text x="20" y="98" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11">Ideal for: Moderate scale, page management</text>
+    </g>
+
+    <!-- 3-Line Box -->
+    <g transform="translate(25, 200)">
+      <rect width="330" height="135" rx="14" fill="#0B0F19" stroke="#FBAD18" stroke-width="1.8" />
+      <text x="20" y="30" fill="#FDE047" font-family="system-ui, sans-serif" font-size="13" font-weight="800">3-LINE REINSTATED (GOLD STANDARD)</text>
+      <text x="20" y="55" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">✓ ID Restored + Ad Access Reinstated</text>
+      <text x="20" y="78" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">✓ Internal Meta Trust Tier: Elite</text>
+      <text x="20" y="100" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12">✓ Survives Aggressive AI Ban Sweeps</text>
+      <text x="20" y="122" fill="#FBAD18" font-family="system-ui, sans-serif" font-size="11" font-weight="700">★ Recommended for High-Budget Media Buyers</text>
+    </g>
+
+    <rect x="25" y="355" width="330" height="42" rx="10" fill="#FBAD18" fill-opacity="0.12" stroke="#FBAD18" stroke-opacity="0.3" stroke-width="1" />
+    <text x="45" y="380" fill="#FBAD18" font-family="system-ui, sans-serif" font-size="12" font-weight="700">Direct Comparison Guide • 2026 Edition</text>
+  </g>
+
+  <!-- Footer Branding -->
+  <g transform="translate(100, 560)">
+    <rect width="180" height="32" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="20" y="21" fill="#FDE047" font-family="system-ui, sans-serif" font-size="13" font-weight="800">BM4U.NET</text>
+    <text x="90" y="21" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11" font-weight="600">• VERIFICATION</text>
+  </g>
+</svg>

@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F19" />
+      <stop offset="50%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="50%" stop-color="#FBAD18" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.96" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="200" cy="160" r="280" fill="#06B6D4" opacity="0.08" filter="blur(60px)" />
+  <circle cx="1020" cy="450" r="280" fill="#3B82F6" opacity="0.07" filter="blur(70px)" />
+
+  <g stroke="#334155" stroke-opacity="0.15" stroke-width="1">
+    <line x1="0" y1="126" x2="1200" y2="126" />
+    <line x1="0" y1="252" x2="1200" y2="252" />
+    <line x1="0" y1="378" x2="1200" y2="378" />
+    <line x1="0" y1="504" x2="1200" y2="504" />
+    <line x1="240" y1="0" x2="240" y2="630" />
+    <line x1="480" y1="0" x2="480" y2="630" />
+    <line x1="720" y1="0" x2="720" y2="630" />
+    <line x1="960" y1="0" x2="960" y2="630" />
+  </g>
+
+  <!-- Top Badge -->
+  <g transform="translate(100, 75)">
+    <rect width="250" height="38" rx="19" fill="#1E293B" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.6" />
+    <circle cx="22" cy="19" r="6" fill="#06B6D4" />
+    <text x="36" y="24" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="1.5">TIKTOK SCALING</text>
+  </g>
+
+  <!-- Title & Subtitle -->
+  <text x="100" y="175" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="42" font-weight="800" letter-spacing="-0.5">
+    TikTok Agency vs Self-Serve
+  </text>
+  <text x="100" y="235" fill="url(#goldGrad)" font-family="system-ui, sans-serif" font-size="36" font-weight="800" letter-spacing="-0.5">
+    Zero Tax & Worldwide Reach
+  </text>
+  <text x="100" y="285" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="17" font-weight="400">
+    Why enterprise TikTok advertisers avoid self-serve accounts and use agency tier setups.
+  </text>
+
+  <!-- Tags Pill Row -->
+  <g transform="translate(100, 335)">
+    
+      <rect x="0" y="0" width="125" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="14" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#TikTokAds</text>
+    
+      <rect x="135" y="0" width="125" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="149" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#AgencyAccounts</text>
+    
+      <rect x="270" y="0" width="125" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="284" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#ZeroTax</text>
+    
+      <rect x="405" y="0" width="125" height="32" rx="16" fill="#1E293B" stroke="#334155" stroke-width="1" />
+      <text x="419" y="20" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">#WorldwideReach</text>
+    
+  </g>
+
+  <!-- Right Visual Mockup Card -->
+  <g transform="translate(710, 105)" filter="url(#shadow)">
+    <rect width="390" height="425" rx="24" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.5" />
+
+    <!-- Card Header -->
+    <rect width="390" height="60" rx="24" fill="#0F172A" />
+    <path d="M0 40 h390 v20 h-390 z" fill="#0F172A" />
+    <circle cx="35" cy="30" r="13" fill="#06B6D4" opacity="0.2" />
+    <text x="30" y="36" fill="#06B6D4" font-family="system-ui, sans-serif" font-size="14" font-weight="800">✓</text>
+    <text x="58" y="35" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="13" font-weight="700">TikTok Business Tier Check</text>
+    <rect x="290" y="20" width="75" height="22" rx="11" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
+    <text x="305" y="35" fill="#10B981" font-family="system-ui, sans-serif" font-size="10" font-weight="700">VERIFIED</text>
+
+    <!-- Stat Box -->
+    <g transform="translate(25, 80)">
+      <rect width="340" height="95" rx="16" fill="#0B0F19" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.6" />
+      <text x="20" y="30" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11" font-weight="700" letter-spacing="1">TARGETING PERMISSIONS</text>
+      <text x="20" y="68" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="28" font-weight="900">55+ COUNTRIES OPEN</text>
+      <text x="20" y="86" fill="#06B6D4" font-family="system-ui, sans-serif" font-size="11" font-weight="700">0% Ad Tax Deduction</text>
+    </g>
+
+    <!-- Checklist items inside Card -->
+    
+      <circle cx="28" cy="210" r="12" fill="#06B6D4" fill-opacity="0.15" />
+      <path d="M24 210 l3 3 l6 -6" stroke="#06B6D4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="50" y="215" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Target USA, UK, EU, GCC from any region</text>
+    
+      <circle cx="28" cy="250" r="12" fill="#06B6D4" fill-opacity="0.15" />
+      <path d="M24 250 l3 3 l6 -6" stroke="#06B6D4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="50" y="255" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Zero local VAT deduction on spend</text>
+    
+      <circle cx="28" cy="290" r="12" fill="#06B6D4" fill-opacity="0.15" />
+      <path d="M24 290 l3 3 l6 -6" stroke="#06B6D4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="50" y="295" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Instant appeal review support</text>
+    
+      <circle cx="28" cy="330" r="12" fill="#06B6D4" fill-opacity="0.15" />
+      <path d="M24 330 l3 3 l6 -6" stroke="#06B6D4" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="50" y="335" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Direct cashback incentives available</text>
+    
+
+    <rect x="25" y="375" width="340" height="34" rx="8" fill="#FBAD18" fill-opacity="0.12" stroke="#FBAD18" stroke-opacity="0.3" stroke-width="1" />
+    <text x="65" y="397" fill="#FBAD18" font-family="system-ui, sans-serif" font-size="12" font-weight="700">BM4U Enterprise Guide • 2026 Edition</text>
+  </g>
+
+  <!-- Footer Branding -->
+  <g transform="translate(100, 560)">
+    <rect width="180" height="32" rx="8" fill="#1E293B" stroke="#334155" stroke-width="1" />
+    <text x="20" y="21" fill="#FDE047" font-family="system-ui, sans-serif" font-size="13" font-weight="800">BM4U.NET</text>
+    <text x="90" y="21" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11" font-weight="600">• OFFICIAL GUIDE</text>
+  </g>
+</svg>

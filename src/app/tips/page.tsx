@@ -1,80 +1,98 @@
-'use client';
-
-import React from 'react';
-import Link from 'next/link';
-import { BookOpen, Calendar, Clock, ArrowRight } from 'lucide-react';
+import type { Metadata } from 'next';
+import { BookOpen } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { POSTS } from '@/data/posts';
+import { TipsListClient } from './TipsListClient';
+
+export const metadata: Metadata = {
+  title: 'Meta Ads Tips, BM Guides & Scale Strategies | BM4U Blog',
+  description: 'Expert Facebook & TikTok advertising guides. Master BM2500 scaling, backup admin security, 2-line vs 3-line reinstated accounts, and safe 7-day warmup strategies.',
+  keywords: [
+    'Facebook Business Manager Tips',
+    'Meta Ads Guides',
+    'BM2500 Scale Guide',
+    'How to add backup admin Facebook BM',
+    '2-line vs 3-line reinstated accounts',
+    'BM5 Business Manager',
+    'Facebook ad account warmup strategy',
+    'Media Buying Tips',
+    'Agency Ad Accounts'
+  ],
+  alternates: {
+    canonical: 'https://bm4u.net/tips',
+  },
+  openGraph: {
+    title: 'Meta Ads Tips, BM Guides & Scale Strategies | BM4U Blog',
+    description: 'Expert Facebook & TikTok advertising guides. Master BM2500 scaling, backup admin security, 2-line vs 3-line reinstated accounts, and safe 7-day warmup strategies.',
+    url: 'https://bm4u.net/tips',
+    siteName: 'BM4U.net',
+    images: [
+      {
+        url: 'https://bm4u.net/tips/facebook-bm2500-guide.svg',
+        width: 1200,
+        height: 630,
+        alt: 'BM4U Meta Ads Tips & Business Manager Knowledge Base',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Meta Ads Tips, BM Guides & Scale Strategies | BM4U Blog',
+    description: 'Master Facebook Business Manager operations, scale campaigns safely, and prevent ad restrictions.',
+    images: ['https://bm4u.net/tips/facebook-bm2500-guide.svg'],
+  },
+};
 
 export default function TipsPage() {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Meta Ads Tips & Guides - BM4U Knowledge Base',
+    description: 'Master Business Manager operations, scale campaigns safely, add backup administrators, and prevent unnecessary restrictions.',
+    url: 'https://bm4u.net/tips',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: POSTS.map((post, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://bm4u.net/tips/${post.slug}`,
+        name: post.title,
+        image: `https://bm4u.net${post.image}`,
+      })),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#EDF0F2] flex flex-col">
+      {/* Schema.org CollectionPage / ItemList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Navbar />
 
       <main className="flex-1 py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-cosmic relative">
-        <div className="mx-auto max-w-5xl">
-          
+        <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 badge-calon text-xs mb-4">
               <BookOpen className="w-3.5 h-3.5 text-amber-600" />
-              <span>Advertiser Knowledge Base</span>
+              <span>Advertiser Knowledge Base &amp; SEO Guides</span>
             </div>
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-              Meta Ads <span className="text-gradient">Tips & Guides</span>
+              Meta Ads <span className="text-gradient">Tips &amp; Blueprint Guides</span>
             </h1>
-            <p className="text-slate-600 text-base max-w-xl mx-auto">
-              Master Business Manager operations, scale campaigns safely, add backup administrators, and prevent unnecessary restrictions.
+            <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+              Step-by-step technical blueprints written for professional media buyers, agencies, and e-commerce brands. Scale ad budgets securely, configure backup administrators, and master asset resilience.
             </p>
           </div>
 
-          {/* Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {POSTS.map(post => (
-              <article
-                key={post.slug}
-                className="bg-white rounded-3xl p-6 flex flex-col justify-between border border-slate-200 shadow-sm hover:border-amber-300 hover:shadow-md transition-all duration-300 group"
-              >
-                <div>
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
-                    <span className="badge-calon text-[10px] py-0.5 px-2">
-                      {post.category}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-amber-600" />
-                      {post.readTime}
-                    </span>
-                  </div>
-
-                  <Link href={`/tips/${post.slug}`}>
-                    <h2 className="font-heading text-lg font-bold text-slate-900 group-hover:text-amber-600 transition-colors mb-3 leading-snug">
-                      {post.title}
-                    </h2>
-                  </Link>
-
-                  <p className="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-6">
-                    {post.excerpt}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="text-slate-500 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {post.date}
-                  </span>
-
-                  <Link
-                    href={`/tips/${post.slug}`}
-                    className="text-amber-600 hover:text-amber-700 font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-1"
-                  >
-                    <span>Read Guide</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          {/* Interactive Client Search & Filter Grid */}
+          <TipsListClient posts={POSTS} />
         </div>
       </main>
 
