@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     if (Array.isArray(body.content)) {
       contentArray = body.content.map((c: string) => String(c).trim()).filter(Boolean);
     } else if (typeof body.content === 'string') {
-      contentArray = body.content.split('\n\n').map(c => c.trim()).filter(Boolean);
+      contentArray = body.content.split('\n\n').map((c: string) => c.trim()).filter(Boolean);
     }
 
     const now = new Date().toISOString();

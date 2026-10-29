@@ -78,8 +78,8 @@ async function getRelatedPosts(currentPost: BlogPost): Promise<BlogPost[]> {
   return POSTS
     .filter(p => p.slug !== currentPost.slug)
     .sort((a, b) => {
-      const aShared = a.tags.filter(t => (currentPost.tags || []).includes(t)).length;
-      const bShared = b.tags.filter(t => (currentPost.tags || []).includes(t)).length;
+      const aShared = (a.tags || []).filter(t => (currentPost.tags || []).includes(t)).length;
+      const bShared = (b.tags || []).filter(t => (currentPost.tags || []).includes(t)).length;
       return bShared - aShared;
     })
     .slice(0, 3);
