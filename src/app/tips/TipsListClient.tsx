@@ -22,7 +22,19 @@ interface TipsListClientProps {
   posts: BlogPost[];
 }
 
-function TipsListContent({ posts }: TipsListClientProps) {
+function TipsListContent({ posts: initialPosts }: TipsListClientProps) {
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
+
+  useEffect(() => {
+    fetch('/api/posts')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setPosts(data.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
   const searchParams = useSearchParams();
   const initialTag = searchParams.get('tag') || 'All';
   const initialCategory = searchParams.get('category') || 'All';

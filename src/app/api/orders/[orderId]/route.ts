@@ -78,9 +78,11 @@ export async function PATCH(
 
     // Trigger instant Telegram alert if TXID was submitted
     if (body.txid) {
-      notifyTxidSubmitted(orderId.trim(), body.txid, updated.customer?.telegram).catch(err =>
-        console.error('Telegram TXID notification error:', err)
-      );
+      try {
+        await notifyTxidSubmitted(orderId.trim(), body.txid, updated.customer?.telegram);
+      } catch (tgErr) {
+        console.error('Telegram TXID notification error:', tgErr);
+      }
     }
 
     return NextResponse.json({

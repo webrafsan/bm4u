@@ -1,11 +1,29 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
-const options = {};
+const DIRECT_REPLICA_URI = 'mongodb://hirafsan1_db_user:qN8Xp5iY9Z0eflD2@ac-wzh7atb-shard-00-00.vfhwhh0.mongodb.net:27017,ac-wzh7atb-shard-00-01.vfhwhh0.mongodb.net:27017,ac-wzh7atb-shard-00-02.vfhwhh0.mongodb.net:27017/bm4u?ssl=true&replicaSet=atlas-qzp4vq-shard-0&authSource=admin&retryWrites=true&w=majority';
 
-if (!uri) {
-  throw new Error('Please add your Mongo URI to .env.local');
+function resolveMongoUri(): string {
+  let envUri = process.env.MONGODB_URI || process.env.MONGODB_SRV_URI;
+  if (!envUri) return DIRECT_REPLICA_URI;
+
+  // Fix any spaces or corruption introduced by copy-pasting in control panels (e.g. 'ac wzh7atb')
+  envUri = envUri.replace(/ac\s+wzh7atb/g, 'ac-wzh7atb').replace(/\s+/g, '');
+
+  // If it is an SRV uri (mongodb+srv://), querySrv fails on many shared host environments.
+  // DIRECT_REPLICA_URI connects directly to Atlas shards without DNS SRV lookup.
+  if (envUri.startsWith('mongodb+srv://')) {
+    return DIRECT_REPLICA_URI;
+  }
+
+  return envUri;
 }
+
+const uri = resolveMongoUri();
+const options = {
+  serverSelectionTimeoutMS: 5000,
+  connectTimeoutMS: 10000,
+  family: 4,
+};
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
@@ -16,15 +34,12 @@ declare global {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
     global._mongoClientPromise = client.connect();
   }
   clientPromise = global._mongoClientPromise;
 } else {
-  // In production mode, it's best to not use a global variable.
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }

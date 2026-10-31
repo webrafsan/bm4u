@@ -23,9 +23,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ordersCol = await getOrdersCollection();
-    const productsCol = await getProductsCollection();
-
     // Generate readable random order ID: BM-XXXXXX
     const orderId = body.orderId || `BM-${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -51,26 +48,39 @@ export async function POST(req: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    const insertResult = await ordersCol.insertOne(newOrder);
+    // 1. Always trigger automated Telegram notification immediately
+    try {
+      await notifyNewOrder(newOrder);
+      console.log('[BM4U] Telegram alert dispatched for order:', newOrder.orderId);
+    } catch (tgErr) {
+      console.error('[BM4U] Telegram notification error:', tgErr);
+    }
 
-    // Trigger instant automated Telegram notification to admin
-    notifyNewOrder(newOrder).catch(err => console.error('Telegram order notification error:', err));
+    // 2. Persist to MongoDB
+    let insertedId: any = undefined;
+    try {
+      const ordersCol = await getOrdersCollection();
+      const insertResult = await ordersCol.insertOne(newOrder);
+      insertedId = insertResult.insertedId;
 
-    // Decrement stock in MongoDB for purchased items
-    for (const item of items) {
-      if (item.product?.id) {
-        await productsCol.updateOne(
-          { id: item.product.id },
-          { $inc: { stock: -Math.max(1, item.quantity || 1) } }
-        );
+      const productsCol = await getProductsCollection();
+      for (const item of items) {
+        if (item.product?.id) {
+          await productsCol.updateOne(
+            { id: item.product.id },
+            { $inc: { stock: -Math.max(1, item.quantity || 1) } }
+          );
+        }
       }
+    } catch (dbErr) {
+      console.error('[BM4U] Database order insert notice:', dbErr);
     }
 
     return NextResponse.json({
       success: true,
       message: 'Order created successfully',
       orderId: newOrder.orderId,
-      order: { ...newOrder, _id: insertResult.insertedId },
+      order: { ...newOrder, _id: insertedId },
     }, { status: 201 });
   } catch (err: any) {
     console.error('Create order error:', err);

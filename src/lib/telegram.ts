@@ -11,9 +11,12 @@ interface TelegramConfig {
  * 1. Environment variables (.env.local)
  * 2. MongoDB site_config settings
  */
+const DEFAULT_TELEGRAM_BOT_TOKEN = '9165886419:AAHs4EnRqLZWtY5G__Ms83jkOM7PZtvU6y8';
+const DEFAULT_TELEGRAM_CHAT_ID = '-5583839789';
+
 export async function getTelegramConfig(): Promise<TelegramConfig> {
-  const envToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
-  const envChatId = process.env.TELEGRAM_CHAT_ID?.trim();
+  const envToken = process.env.TELEGRAM_BOT_TOKEN?.trim() || DEFAULT_TELEGRAM_BOT_TOKEN;
+  const envChatId = process.env.TELEGRAM_CHAT_ID?.trim() || DEFAULT_TELEGRAM_CHAT_ID;
 
   if (envToken && envChatId) {
     return { botToken: envToken, chatId: envChatId };
@@ -43,8 +46,8 @@ export async function sendTelegramMessage(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const config = await getTelegramConfig();
-    const botToken = overrideToken || config.botToken;
-    const chatId = overrideChatId || config.chatId;
+    const botToken = (overrideToken || config.botToken || DEFAULT_TELEGRAM_BOT_TOKEN).trim();
+    const chatId = (overrideChatId || config.chatId || DEFAULT_TELEGRAM_CHAT_ID).trim();
 
     if (!botToken || !chatId) {
       console.warn('⚠️ Telegram notification skipped: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is missing.');
@@ -69,6 +72,7 @@ export async function sendTelegramMessage(
       return { success: false, error: data.description || 'Telegram API rejected message.' };
     }
 
+    console.log('[BM4U] Telegram message delivered successfully to chat:', chatId);
     return { success: true };
   } catch (err: any) {
     console.error('Failed to send Telegram notification:', err);
@@ -98,7 +102,7 @@ export async function notifyNewOrder(order: OrderRecord): Promise<void> {
     const notesDisplay = order.customer?.orderNotes ? `\n📝 <b>Customer Notes:</b> <i>${order.customer.orderNotes}</i>` : '';
 
     const text = 
-      `🚨 <b>NEW ORDER RECEIVED! — BM SHOP</b>\n` +
+      `🚨 <b>NEW ORDER RECEIVED! — BM 4 U</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `📦 <b>Order ID:</b> <code>#${order.orderId}</code>\n` +
       `👤 <b>Customer Name:</b> ${order.customer?.fullName || 'Anonymous'}\n` +
@@ -114,7 +118,7 @@ export async function notifyNewOrder(order: OrderRecord): Promise<void> {
       `${notesDisplay}\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `⏰ <b>Time:</b> ${new Date().toLocaleString('en-US', { timeZone: 'UTC' })} UTC\n` +
-      `⚡ <a href="http://localhost:3000/drafsan">Open Admin Dashboard</a>`;
+      `⚡ <a href="https://bm4u.net/drafsan">Open Admin Dashboard</a>`;
 
     await sendTelegramMessage(text);
   } catch (err) {
@@ -132,7 +136,7 @@ export async function notifyTxidSubmitted(
 ): Promise<void> {
   try {
     const text =
-      `💰 <b>PAYMENT TXID SUBMITTED! — BM SHOP</b>\n` +
+      `💰 <b>PAYMENT TXID SUBMITTED! — BM 4 U</b>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `📦 <b>Order ID:</b> <code>#${orderId}</code>\n` +
       `💬 <b>Customer Telegram:</b> <b>${customerTelegram || 'N/A'}</b>\n` +
@@ -140,7 +144,7 @@ export async function notifyTxidSubmitted(
       `<code>${txid}</code>\n` +
       `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
       `⚡ <b>Action Required:</b> Verify transaction on blockchain explorer and dispatch credentials in the admin dashboard.\n` +
-      `🔗 <a href="http://localhost:3000/drafsan">Fulfill Order in Dashboard</a>`;
+      `🔗 <a href="https://bm4u.net/drafsan">Fulfill Order in Dashboard</a>`;
 
     await sendTelegramMessage(text);
   } catch (err) {
