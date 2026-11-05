@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getSettingsCollection } from '@/lib/db';
 import { CRYPTO_WALLETS } from '@/data/cryptoWallets';
 
 const DEFAULT_SETTINGS = {
   key: 'site_config',
-  heroTitle: 'Scale Your Meta & TikTok Campaigns With High-Limit Business Managers',
+  heroTitle: 'Buy Facebook Business Manager & Scale Meta Ads Without Restrictions',
   heroSubtitle: 'Premium verified Business Managers, 2-line & 3-line reinstated accounts, BM2500, and TikTok agency accounts designed for media buyers, agencies, and performance advertisers with instant 24H replacement.',
   announcementText: '⚡ Instant Auto Delivery & 24H Full Replacement Guarantee Active',
   telegramUsername: 'bybm4u',
@@ -58,6 +59,7 @@ export async function PUT(req: NextRequest) {
       { upsert: true, returnDocument: 'after' }
     );
 
+    revalidateTag('settings', 'max');
     return NextResponse.json({
       success: true,
       message: 'Site settings updated successfully',

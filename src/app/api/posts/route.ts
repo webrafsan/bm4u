@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getPostsCollection } from '@/lib/db';
 import { POSTS } from '@/data/posts';
 import { BlogPost } from '@/types';
@@ -75,12 +76,16 @@ export async function POST(req: NextRequest) {
       content: Array.isArray(body.content) 
         ? body.content 
         : (body.content ? body.content.split('\n\n').filter(Boolean) : []),
+      metaTitle: body.metaTitle || undefined,
+      metaDescription: body.metaDescription || undefined,
+      keywords: body.keywords || undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     const result = await postsCol.insertOne(newPost);
 
+    revalidateTag('posts', 'max');
     return NextResponse.json({
       success: true,
       message: 'Post created successfully',

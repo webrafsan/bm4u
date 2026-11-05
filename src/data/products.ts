@@ -4,7 +4,7 @@ export const PRODUCTS: Product[] = [
   // SPECIAL HIGH-LIMIT ITEMS
   {
     id: 'bm-2500',
-    slug: 'buy-facebook-bm2500-premium-meta-business-manager',
+    slug: 'facebook-bm2500-business-manager',
     title: 'Buy Facebook BM2500 – Premium Meta Business Manager',
     category: 'special-item',
     price: 22500,
@@ -29,7 +29,7 @@ export const PRODUCTS: Product[] = [
   // BUSINESS MANAGERS
   {
     id: 'bm3-50',
-    slug: 'bm3-restored-business-manager-50-limit-3-ads-ready',
+    slug: 'bm3-restored-business-manager-50-limit',
     title: 'BM3 Restored Business Manager – $50 Limit | 3 Ads Ready',
     category: 'business-manager',
     price: 6,
@@ -50,7 +50,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm3-250',
-    slug: 'bm3-250-limit-reinstated-business-manager-3-ads-accounts',
+    slug: 'bm3-250-limit-reinstated-business-manager',
     title: 'BM3 $250 Limit Reinstated Business Manager | 3 Ads Accounts | 2025 Created',
     category: 'business-manager',
     price: 72,
@@ -71,7 +71,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm0-bm1-old',
-    slug: 'bm0-bm1-reinstated-business-manager-50-limit-create-2021-2022',
+    slug: 'bm0-bm1-reinstated-business-manager-2021-2022',
     title: 'BM0 / BM1 Reinstated Business Manager – $50 Limit | Create 2021-2022',
     category: 'business-manager',
     price: 12,
@@ -91,7 +91,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm-hold-agency',
-    slug: 'reinstated-business-manager-cant-create-ads-acc-best-for-hold-agency-ads',
+    slug: 'reinstated-hold-business-manager-agency-ads',
     title: 'Reinstated Business Manager | Best For Hold Agency Ads, Pages & Share Partner',
     category: 'business-manager',
     price: 5,
@@ -111,7 +111,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm1-250-payup',
-    slug: 'bm1-250-limit-reinstated-business-manager-pay-up-bm3',
+    slug: 'bm1-250-limit-reinstated-business-manager',
     title: 'BM1 $250 Limit Reinstated Business Manager | Pay up BM3 | 2025 Created',
     category: 'business-manager',
     price: 52,
@@ -131,7 +131,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm5-super-strong',
-    slug: 'super-strong-bm5-for-hold-page-pixel-share-share-agency-ads',
+    slug: 'bm5-business-manager-hold-page-pixel-share',
     title: 'Super Strong BM5 for Hold Page | Pixel Share | Share Agency Ads Account',
     category: 'business-manager',
     price: 42,
@@ -152,7 +152,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm10-250-verified',
-    slug: 'bm10-250-limit-verified-business-manager-10-ads-created',
+    slug: 'bm10-250-limit-verified-business-manager',
     title: 'BM10 $250 Limit Verified Business Manager | 10 Ads Created | Changeable Billings',
     category: 'business-manager',
     price: 172,
@@ -175,7 +175,7 @@ export const PRODUCTS: Product[] = [
   // VERIFIED BUSINESS MANAGERS
   {
     id: 'bm3-docs-verified-usa',
-    slug: 'bm3-docs-verified-business-manager-usa-50-spending-limit',
+    slug: 'bm3-docs-verified-business-manager-usa',
     title: 'BM3 Docs Verified Business Manager USA – $50 Spending Limit | 3 Ads Ready',
     category: 'verified-bm',
     price: 22,
@@ -198,7 +198,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bm3-docs-verified-usa-4ads',
-    slug: 'bm3-docs-verified-business-manager-usa-50-limit-4-ads-ready',
+    slug: 'bm3-docs-verified-business-manager-usa-4-ads',
     title: 'BM3 Docs Verified Business Manager USA – $50 Spending Limit | 4 Ads Ready',
     category: 'verified-bm',
     price: 25,
@@ -221,7 +221,7 @@ export const PRODUCTS: Product[] = [
   // TIKTOK AD ACCOUNTS
   {
     id: 'tiktok-usa-manual',
-    slug: 'tiktok-ads-business-verified-country-usa-manual-payment',
+    slug: 'tiktok-ads-account-usa-manual-payment',
     title: 'TikTok Ads Business Verified | Country USA | Manual Payment',
     category: 'tiktok-account',
     price: 12,
@@ -245,7 +245,7 @@ export const PRODUCTS: Product[] = [
   // FACEBOOK ACCOUNTS (REINSTATED 2-LINE & 3-LINE)
   {
     id: 'acc-2line-random',
-    slug: 'account-2-line-reinstated-random-country-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-2-line-facebook-account-random-country',
     title: 'Account 2 line Reinstated Random Country Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 9,
@@ -267,7 +267,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-1000xx',
-    slug: 'account-3-line-reinstated-uid-1000xx-random-country-full-2fa-password-changeable',
+    slug: 'reinstated-3-line-facebook-account-uid-1000xx',
     title: 'Account 3 line Reinstated | UID 1000XX | Random Country | Full 2FA | Highly Recommended',
     category: 'facebook-account',
     price: 22,
@@ -289,7 +289,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-usa',
-    slug: 'account-3-line-reinstated-usa-stock-2007-2024-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-usa',
     title: 'Account 3 line Reinstated USA Stock | 2007-2024 | Live Ads – Full 2FA – CP Mail',
     category: 'facebook-account',
     price: 23,
@@ -312,7 +312,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-uk',
-    slug: 'account-3-line-reinstated-uk-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-uk',
     title: 'Account 3 line Reinstated UK Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -332,7 +332,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-bd',
-    slug: 'account-3-line-reinstated-bangladesh-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-bangladesh',
     title: 'Account 3 line Reinstated Bangladesh Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -354,7 +354,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-australia',
-    slug: 'account-3-line-reinstated-australian-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-australia',
     title: 'Account 3 line Reinstated Australian Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -374,7 +374,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-germany',
-    slug: 'account-3-line-reinstated-germany-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-germany',
     title: 'Account 3 line Reinstated Germany Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -394,7 +394,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-france',
-    slug: 'account-3-line-reinstated-france-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-france',
     title: 'Account 3 line Reinstated France Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -414,7 +414,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-hongkong',
-    slug: 'account-3-line-reinstated-hong-kong-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-hong-kong',
     title: 'Account 3 line Reinstated Hong Kong Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -434,7 +434,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-algeria',
-    slug: 'account-3-line-reinstated-algeria-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-algeria',
     title: 'Account 3 line Reinstated Algeria Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -449,7 +449,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-cameroon',
-    slug: 'account-3-line-reinstated-cameroon-stock-2007-2024-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-cameroon',
     title: 'Account 3 line Reinstated Cameroon Stock | 2007-2024 | Live Ads – Full 2FA – CP Mail',
     category: 'facebook-account',
     price: 22,
@@ -464,7 +464,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-poland',
-    slug: 'account-3-line-reinstated-poland-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-poland',
     title: 'Account 3 line Reinstated Poland Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -479,7 +479,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-spain',
-    slug: 'account-3-line-reinstated-spain-stock-2007-2024-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-spain',
     title: 'Account 3 line Reinstated Spain Stock | 2007-2024 | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -494,7 +494,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-cambodia',
-    slug: 'account-3-line-reinstated-cambodia-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-cambodia',
     title: 'Account 3 line Reinstated Cambodia Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,
@@ -509,7 +509,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'acc-3line-pakistan',
-    slug: 'account-3-line-reinstated-pakistan-stock-live-ads-full-2fa-cp-mail',
+    slug: 'reinstated-3-line-facebook-account-pakistan',
     title: 'Account 3 line Reinstated Pakistan Stock | Live Ads – Full 2FA – CP mail',
     category: 'facebook-account',
     price: 22,

@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { 
   Check, 
   ShieldCheck, 
   ShoppingBag, 
-  Send, 
+
   Minus, 
   Plus, 
   Zap, 
@@ -17,57 +17,28 @@ import {
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ProductCard } from '@/components/ProductCard';
-import { PRODUCTS } from '@/data/products';
+import type { Faq } from '@/lib/seoContent';
 import { Product } from '@/types';
+import { CATEGORY_PAGES, categoryPathFor } from '@/lib/categories';
 import { useCart } from '@/context/CartContext';
+import { TelegramIcon } from '@/components/icons/TelegramIcon';
 
-export default function ProductClient({ slug }: { slug: string }) {
+export default function ProductClient({
+  product,
+  relatedProducts,
+  faqs,
+  seoContent,
+}: {
+  product: Product;
+  relatedProducts: Product[];
+  faqs: Faq[];
+  seoContent?: React.ReactNode;
+}) {
   const router = useRouter();
   const { addToCart, buyNow } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'specs' | 'rules' | 'faq'>('specs');
   const [formatCopied, setFormatCopied] = useState(false);
-
-  const initialProd = PRODUCTS.find(p => p.slug === slug);
-  const [product, setProduct] = useState<Product | undefined>(initialProd);
-
-  // Dynamic MongoDB fetch
-  useEffect(() => {
-    async function fetchDynamic() {
-      try {
-        const res = await fetch(`/api/products/${slug}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.data) {
-            setProduct(data.data);
-          }
-        }
-      } catch (e) {
-        // use initial
-      }
-    }
-    fetchDynamic();
-  }, [slug]);
-
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-[#EDF0F2] flex flex-col text-[#0F172A]">
-        <Navbar />
-        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-          <h1 className="font-heading text-2xl font-bold text-[#0F172A] mb-2">Product Not Found</h1>
-          <p className="text-sm text-[#64748B] mb-6">The requested product does not exist or has been updated.</p>
-          <Link href="/shop" className="btn-action btn-primary text-xs py-2.5 px-6 rounded-xl font-bold">
-            Back to Shop
-          </Link>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  const relatedProducts = PRODUCTS.filter(
-    p => p.category === product.category && p.id !== product.id
-  ).slice(0, 4);
 
   const handleBuyNow = () => {
     buyNow(product, quantity);
@@ -100,6 +71,10 @@ export default function ProductClient({ slug }: { slug: string }) {
             <Link href="/" className="hover:text-[#0F172A] transition-colors">Home</Link>
             <span>/</span>
             <Link href="/shop" className="hover:text-[#0F172A] transition-colors">Shop</Link>
+            <span>/</span>
+            <Link href={categoryPathFor(product.category)} className="hover:text-[#0F172A] transition-colors">
+              {CATEGORY_PAGES.find(c => c.category === product.category)?.name ?? 'Category'}
+            </Link>
             <span>/</span>
             <span className="text-[#D97706] font-bold truncate max-w-xs">{product.title}</span>
           </div>
@@ -141,9 +116,9 @@ export default function ProductClient({ slug }: { slug: string }) {
                     <span className="text-[11px] font-mono uppercase tracking-widest text-[#64748B] font-bold block mb-2">
                       Asset Identifier: #{product.id.toUpperCase()}
                     </span>
-                    <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight">
+                    <p className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0F172A] leading-tight">
                       {product.limit || product.title}
-                    </h2>
+                    </p>
                   </div>
                 </div>
 
@@ -175,7 +150,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                   <span>Instant Delivery to Email & Telegram</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-[#0F172A] font-medium">
-                  <Send className="w-4 h-4 text-[#D97706] shrink-0" />
+                  <TelegramIcon className="w-4 h-4 shrink-0" />
                   <span>Priority 1-on-1 Support via Telegram</span>
                 </div>
               </div>
@@ -261,16 +236,16 @@ export default function ProductClient({ slug }: { slug: string }) {
                   rel="noopener noreferrer"
                   className="w-full py-3.5 px-4 rounded-xl bg-white border border-[#CBD5E1] hover:border-[#FBAD18] text-xs font-bold text-[#0F172A] flex items-center justify-center gap-2 transition-all shadow-xs"
                 >
-                  <Send className="w-3.5 h-3.5 text-[#D97706]" />
+                  <TelegramIcon className="w-3.5 h-3.5" />
                   <span>Order Directly via Telegram</span>
                 </a>
               </div>
 
               {/* Feature Checklist */}
               <div className="p-6 rounded-2xl bg-white border border-[#CBD5E1] space-y-2.5 shadow-xs">
-                <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-[#0F172A] mb-3">
+                <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-[#0F172A] mb-3">
                   Included In This Package
-                </h4>
+                </h2>
                 {product.features.map((feat, idx) => (
                   <div key={idx} className="flex items-center gap-2 text-xs text-[#334155] font-medium">
                     <Check className="w-4 h-4 text-[#10B981] shrink-0 stroke-[2.5]" />
@@ -323,7 +298,7 @@ export default function ProductClient({ slug }: { slug: string }) {
                   Upon successful order placement, your account credentials or Business Manager invitation links are prepared and transmitted immediately.
                 </p>
                 <div className="p-4 rounded-xl bg-[#EDF0F2] border border-[#CBD5E1] space-y-2">
-                  <h5 className="font-bold text-[#0F172A]">Recommended Login Procedure:</h5>
+                  <h3 className="font-bold text-[#0F172A]">Recommended Login Procedure:</h3>
                   <ol className="list-decimal list-inside space-y-1 text-xs text-[#334155] font-medium">
                     <li>First, run the account UID through our <Link href="/live-uid-checker" className="text-[#D97706] underline font-bold">Live UID Checker</Link> to ensure green active status.</li>
                     <li>Always use high-quality residential proxies matching the profile&apos;s specified country footprint.</li>
@@ -356,29 +331,25 @@ export default function ProductClient({ slug }: { slug: string }) {
             {/* TAB CONTENT: FAQ */}
             {activeTab === 'faq' && (
               <div className="space-y-4 text-xs sm:text-sm text-[#475569]">
-                <div className="space-y-1">
-                  <h5 className="font-bold text-[#0F172A]">Can I change the password and email?</h5>
-                  <p className="text-xs">
-                    Yes, for 3-line password changeable accounts. However, we recommend warming up the browser session for 24 hours before updating primary credentials to prevent triggering sudden security checks.
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <h5 className="font-bold text-[#0F172A]">What payment methods are supported?</h5>
-                  <p className="text-xs">
-                    We accept Cryptocurrency (BTC, ETH, USDT, SOL) with automatic offline QR & TXID verification.
-                  </p>
-                </div>
+                {faqs.map(faq => (
+                  <div key={faq.question} className="space-y-1">
+                    <h3 className="font-bold text-[#0F172A]">{faq.question}</h3>
+                    <p className="text-xs">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
+
+          {seoContent}
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-heading text-xl sm:text-2xl font-extrabold text-[#0F172A]">
+                <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                   Related Advertising Assets
-                </h3>
+                </h2>
                 <Link href="/shop" className="text-xs font-bold text-[#D97706] hover:underline">
                   View all products →
                 </Link>
