@@ -2,8 +2,8 @@
 
 @layer base {
   :root {
-    --font-inter: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-inter-tight: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-inter: var(--nf-inter), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-inter-tight: var(--nf-inter-tight), 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --bg-ash: #EDF0F2;
     --bg-surface: #FFFFFF;
     --bg-card: #FFFFFF;
@@ -467,4 +467,38 @@
 
 .animate-scale-in {
   animation: scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+/* ============================================================
+   MOBILE MENU + TELEGRAM CHAT WIDGET
+   ============================================================ */
+@keyframes nav-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nav-slide { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes tg-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes tg-bubble {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes tg-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  70%, 100% { transform: scale(1.55); opacity: 0; }
+}
+@keyframes tg-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.anim-nav-fade { animation: nav-fade 0.2s ease-out; }
+.anim-nav-slide { animation: nav-slide 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+.anim-tg-pop { animation: tg-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1); transform-origin: bottom right; }
+.anim-tg-bubble { animation: tg-bubble 0.3s ease-out; }
+.anim-tg-ring { animation: tg-ring 2.6s ease-out infinite; }
+.tg-dot { animation: tg-dot 1s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-nav-fade, .anim-nav-slide, .anim-tg-pop, .anim-tg-bubble, .anim-tg-ring, .tg-dot { animation: none; }
 }

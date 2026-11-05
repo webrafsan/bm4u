@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getProductsCollection } from '@/lib/db';
 import { ObjectId } from 'mongodb';
 
@@ -61,6 +62,7 @@ export async function PUT(
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
 
+    revalidateTag('products', 'max');
     return NextResponse.json({
       success: true,
       message: 'Product updated successfully',
@@ -91,6 +93,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
 
+    revalidateTag('products', 'max');
     return NextResponse.json({
       success: true,
       message: 'Product deleted successfully',

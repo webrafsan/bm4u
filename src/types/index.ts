@@ -23,6 +23,11 @@ export interface Product {
   guarantee: string;
   isPopular?: boolean;
   isSpecial?: boolean;
+  // Optional SEO overrides; keywords is a comma-separated string or a list.
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string | string[];
+  updatedAt?: string;
 }
 
 export interface CartItem {
@@ -38,6 +43,10 @@ export interface BlogPost {
   excerpt: string;
   content: string[];
   category: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string | string[];
+  updatedAt?: string;
 }
 
 export interface UIDCheckResult {

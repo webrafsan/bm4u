@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { getProductsCollection } from '@/lib/db';
 import { PRODUCTS } from '@/data/products';
 
@@ -96,12 +97,16 @@ export async function POST(req: NextRequest) {
       guarantee: body.guarantee || '24 Hours Replacement Guarantee',
       isPopular: Boolean(body.isPopular),
       isSpecial: Boolean(body.isSpecial),
+      metaTitle: body.metaTitle || undefined,
+      metaDescription: body.metaDescription || undefined,
+      keywords: body.keywords || undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     const result = await productsCol.insertOne(newProduct);
 
+    revalidateTag('products', 'max');
     return NextResponse.json({
       success: true,
       message: 'Product created successfully',

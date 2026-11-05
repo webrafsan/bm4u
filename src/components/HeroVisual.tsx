@@ -50,7 +50,7 @@ export function HeroVisual() {
       <div className="hidden xl:block pointer-events-none">
         {/* Top-Left: Meta BM2500 Badge */}
         <Link 
-          href="/product/facebook-bm2500"
+          href="/product/facebook-bm2500-business-manager"
           className="pointer-events-auto absolute -top-4 -left-6 z-20 anim-hero-float-1 group"
         >
           <div className="card-glass py-2 px-3.5 rounded-xl border border-[#CBD5E1] flex items-center gap-2.5 shadow-md group-hover:border-[#FBAD18] transition-all bg-white">
@@ -226,7 +226,7 @@ export function HeroVisual() {
             <div className="absolute bottom-[25%] left-[7%] -translate-x-1/2 translate-y-1/2">
               <div className="anim-orbit-ccw">
                 <Link 
-                  href="/product/facebook-bm2500"
+                  href="/product/facebook-bm2500-business-manager"
                   className="flex flex-col items-center group cursor-pointer"
                   title="High Limit BM2500"
                 >

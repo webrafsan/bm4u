@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Send } from 'lucide-react';
+import { TelegramIcon } from '@/components/icons/TelegramIcon';
 
 export const Footer = () => {
   return (
@@ -41,7 +41,7 @@ export const Footer = () => {
                 rel="noopener noreferrer"
                 className="btn-action btn-primary text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 font-bold"
               >
-                <Send className="w-3.5 h-3.5" />
+                <TelegramIcon className="w-3.5 h-3.5" />
                 <span>Contact Telegram</span>
               </a>
             </div>
@@ -59,23 +59,38 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=business-manager" className="hover:text-[#D97706] transition-colors">
+                <Link href="/category/business-manager" className="hover:text-[#D97706] transition-colors">
                   Business Managers
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=verified-bm" className="hover:text-[#D97706] transition-colors">
+                <Link href="/category/verified-bm" className="hover:text-[#D97706] transition-colors">
                   Verified BMs
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=facebook-account" className="hover:text-[#D97706] transition-colors">
+                <Link href="/category/facebook-account" className="hover:text-[#D97706] transition-colors">
                   Facebook Accounts
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=tiktok-account" className="hover:text-[#D97706] transition-colors">
+                <Link href="/category/tiktok-account" className="hover:text-[#D97706] transition-colors">
                   TikTok Accounts
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/high-limit-bm" className="hover:text-[#D97706] transition-colors">
+                  BM2500 High Limit
+                </Link>
+              </li>
+              <li>
+                <Link href="/product/bm5-business-manager-hold-page-pixel-share" className="hover:text-[#D97706] transition-colors">
+                  Buy BM5 Business Manager
+                </Link>
+              </li>
+              <li>
+                <Link href="/product/reinstated-3-line-facebook-account-usa" className="hover:text-[#D97706] transition-colors">
+                  3-Line USA Facebook Account
                 </Link>
               </li>
             </ul>
@@ -119,6 +134,21 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/refund-policy" className="hover:text-[#D97706] transition-colors">
+                  Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-[#D97706] transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-[#D97706] transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
                 <Link href="/tips" className="hover:text-[#D97706] transition-colors">
                   Tips & Guides
                 </Link>
@@ -157,13 +187,6 @@ export const Footer = () => {
               <span className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
               All Systems Operational
             </span>
-            <span className="text-[#CBD5E1]">|</span>
-            <Link
-              href="/admin"
-              className="text-[#94A3B8] hover:text-[#D97706] transition-colors flex items-center gap-1 text-[11px]"
-            >
-              <span>Admin Portal</span>
-            </Link>
           </div>
         </div>
       </div>

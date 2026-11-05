@@ -1,11 +1,36 @@
 import type { Metadata } from 'next';
+import { Inter, Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
+import { Suspense } from 'react';
 import { CartDrawer } from '@/components/CartDrawer';
+import { TelegramChat } from '@/components/TelegramChat';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, ogImage } from '@/lib/seo';
+
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--nf-inter' });
+const interTight = Inter_Tight({ subsets: ['latin'], display: 'swap', variable: '--nf-inter-tight' });
 
 export const metadata: Metadata = {
-  title: 'BM 4 U | Premium Meta Business Manager & Advertising Assets',
-  description: 'Buy high-limit Facebook Business Managers, BM2500, Reinstated 2-line & 3-line accounts, TikTok manual payment accounts with 24H guarantee and instant delivery.',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'BM 4 U | Premium Meta Business Manager & Advertising Assets',
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_US',
+    title: 'BM 4 U | Premium Meta Business Manager & Advertising Assets',
+    description: SITE_DESCRIPTION,
+    images: [{ url: ogImage(), width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BM 4 U | Premium Meta Business Manager & Advertising Assets',
+    description: SITE_DESCRIPTION,
+    images: [ogImage()],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -25,19 +50,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${interTight.variable}`}>
       <body className="min-h-screen bg-[#EDF0F2] text-[#0F172A] antialiased selection:bg-[#FBAD18]/30 selection:text-[#0F172A]">
         <CartProvider>
           {children}
           <CartDrawer />
+          <Suspense fallback={null}>
+            <TelegramChat />
+          </Suspense>
         </CartProvider>
       </body>
     </html>

@@ -171,7 +171,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       {/* Floating Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 bg-white border border-amber-300 text-slate-900 px-4 py-3 rounded-2xl shadow-xl animate-fade-in text-xs font-semibold">
+        <div className="fixed bottom-6 inset-x-0 mx-auto w-fit max-w-[calc(100vw-2rem)] z-50 flex items-center gap-2.5 bg-white border border-amber-300 text-slate-900 px-4 py-3 rounded-2xl shadow-xl animate-fade-in text-xs font-semibold">
           <span className="flex h-2 w-2 rounded-full bg-[#FBAD18] animate-pulse" />
           <span>{toastMessage}</span>
         </div>
